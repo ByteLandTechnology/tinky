@@ -91,12 +91,12 @@ export interface Key {
 /**
  * Handler function for input events.
  */
-type Handler = (input: string, key: Key) => void;
+export type InputHandler = (input: string, key: Key) => void;
 
 /**
  * Options for useInput hook.
  */
-interface Options {
+export interface InputOptions {
   /**
    * Enable or disable capturing of user input. Useful when there are
    * multiple `useInput` hooks used at once to avoid handling same input.
@@ -137,7 +137,10 @@ interface Options {
  * @param inputHandler - The function to call when input is received.
  * @param options - Configuration options.
  */
-export const useInput = (inputHandler: Handler, options: Options = {}) => {
+export const useInput = (
+  inputHandler: InputHandler,
+  options: InputOptions = {},
+) => {
   const { stdin, setRawMode, internal_exitOnCtrlC, internal_eventEmitter } =
     useStdin();
 

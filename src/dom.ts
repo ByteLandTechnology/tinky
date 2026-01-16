@@ -10,10 +10,14 @@ import { TaffyNode } from "./taffy-node.js";
 /**
  * Interface representing a node in the Tinky tree.
  */
-interface TinkyNode {
+export interface TinkyNode {
+  /** Parent DOM element in the tree. */
   parentNode: DOMElement | undefined;
+  /** Taffy layout node for computing dimensions. */
   taffyNode?: TaffyNode;
+  /** Whether this node is inside a Static component. */
   internal_static?: boolean;
+  /** Styles applied to this node. */
   style: Styles;
 }
 
@@ -40,12 +44,18 @@ export type NodeNames = ElementNames | TextName;
  * Interface representing a DOM element in Tinky.
  */
 export type DOMElement = {
+  /** Name of the element type. */
   nodeName: ElementNames;
+  /** Key-value pairs of element attributes. */
   attributes: Record<string, DOMNodeAttribute>;
+  /** Array of child nodes. */
   childNodes: DOMNode[];
+  /** Function to transform the output of this element. */
   internal_transform?: OutputTransformer;
 
+  /** Accessibility attributes for screen readers. */
   internal_accessibility?: {
+    /** ARIA role for the element. */
     role?:
       | "button"
       | "checkbox"
@@ -65,24 +75,39 @@ export type DOMElement = {
       | "textbox"
       | "timer"
       | "toolbar";
+    /** ARIA state values for the element. */
     state?: {
+      /** Whether the element is busy. */
       busy?: boolean;
+      /** Whether the element is checked. */
       checked?: boolean;
+      /** Whether the element is disabled. */
       disabled?: boolean;
+      /** Whether the element is expanded. */
       expanded?: boolean;
+      /** Whether the element accepts multiline input. */
       multiline?: boolean;
+      /** Whether multiple items can be selected. */
       multiselectable?: boolean;
+      /** Whether the element is read-only. */
       readonly?: boolean;
+      /** Whether the element is required. */
       required?: boolean;
+      /** Whether the element is selected. */
       selected?: boolean;
     };
   };
 
   // Internal properties
+  /** Whether static nodes need to be re-rendered. */
   isStaticDirty?: boolean;
+  /** Reference to the Static component node. */
   staticNode?: DOMElement;
+  /** Callback to compute layout before rendering. */
   onComputeLayout?: () => void;
+  /** Callback to trigger a render. */
   onRender?: () => void;
+  /** Callback to trigger an immediate render. */
   onImmediateRender?: () => void;
 } & TinkyNode;
 
@@ -90,7 +115,9 @@ export type DOMElement = {
  * Interface representing a text node in Tinky.
  */
 export type TextNode = {
+  /** Text node identifier. */
   nodeName: TextName;
+  /** Text content of the node. */
   nodeValue: string;
 } & TinkyNode;
 

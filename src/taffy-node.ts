@@ -69,6 +69,11 @@ export class TaffyNode {
     this.tree.remove(this.id);
   }
 
+  /**
+   * Recursively removes a node and all its descendants from the Taffy tree.
+   *
+   * @param id - The ID of the node to remove.
+   */
   private freeRecursive(id: bigint) {
     for (const childId of this.tree.children(id)) {
       this.freeRecursive(childId);

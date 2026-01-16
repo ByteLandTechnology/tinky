@@ -5,7 +5,7 @@ import { useStdin } from "./use-stdin.js";
 /**
  * Options for the useFocus hook.
  */
-interface Input {
+export interface FocusOptions {
   /**
    * Enable or disable this component's focus, while still maintaining its
    * position in the list of focusable components.
@@ -30,9 +30,9 @@ interface Input {
 }
 
 /**
- * Output of the useFocus hook.
+ * Focus state and control methods.
  */
-interface Output {
+export interface FocusState {
   /**
    * Determines whether this component is focused.
    */
@@ -76,7 +76,7 @@ export const useFocus = ({
   isActive = true,
   autoFocus = false,
   id: customId,
-}: Input = {}): Output => {
+}: FocusOptions = {}): FocusState => {
   const { isRawModeSupported, setRawMode } = useStdin();
   const { activeId, add, remove, activate, deactivate, focus } =
     useContext(FocusContext);

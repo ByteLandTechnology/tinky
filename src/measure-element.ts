@@ -1,16 +1,5 @@
 import { type DOMElement } from "./dom.js";
-
-interface Output {
-  /**
-   * Element width.
-   */
-  width: number;
-
-  /**
-   * Element height.
-   */
-  height: number;
-}
+import { type Dimension } from "./dimension.js";
 
 /**
  * Measure the dimensions of a particular `<Box>` element.
@@ -18,7 +7,7 @@ interface Output {
  * @param node - The DOM element to measure.
  * @returns The measured dimensions.
  */
-export const measureElement = (node: DOMElement): Output => {
+export const measureElement = (node: DOMElement): Dimension => {
   const layout = node.taffyNode?.tree.getLayout(node.taffyNode.id);
   return {
     width: layout?.width ?? 0,

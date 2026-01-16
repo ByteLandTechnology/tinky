@@ -11,21 +11,30 @@ export interface FocusProps {
 
   /**
    * Register a new focusable component.
+   *
+   * @param id - Unique identifier for the focusable component.
+   * @param options.autoFocus - Auto-focus the component when registered.
    */
   readonly add: (id: string, options: { autoFocus: boolean }) => void;
 
   /**
    * Unregister a focusable component.
+   *
+   * @param id - Unique identifier of the component to unregister.
    */
   readonly remove: (id: string) => void;
 
   /**
-   * Mark a component as active.
+   * Mark a component as active (focused).
+   *
+   * @param id - Unique identifier of the component to activate.
    */
   readonly activate: (id: string) => void;
 
   /**
-   * Mark a component as inactive.
+   * Mark a component as inactive (unfocused).
+   *
+   * @param id - Unique identifier of the component to deactivate.
    */
   readonly deactivate: (id: string) => void;
 
@@ -51,6 +60,8 @@ export interface FocusProps {
 
   /**
    * Focus a specific component by ID.
+   *
+   * @param id - Unique identifier of the component to focus.
    */
   readonly focus: (id: string) => void;
 }

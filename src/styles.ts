@@ -1286,7 +1286,7 @@ const applyGridStyles = (taffyStyle: TaffyStyle, style: Styles): void => {
   }
 };
 
-export const styles = (node: TaffyNode, style: Styles = {}): void => {
+export const applyStyles = (node: TaffyNode, style: Styles = {}): void => {
   const taffyStyle = node.tree.getStyle(node.id);
   applyPositionStyles(taffyStyle, style);
   applyMarginStyles(taffyStyle, style);

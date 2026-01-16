@@ -2,9 +2,9 @@ import { useContext } from "react";
 import { type FocusProps, FocusContext } from "../components/FocusContext.js";
 
 /**
- * Output of the useFocusManager hook.
+ * Focus management control methods.
  */
-interface Output {
+export interface FocusManager {
   /**
    * Enable focus management for all components.
    */
@@ -43,7 +43,7 @@ interface Output {
  *
  * @returns Object containing focus management functions.
  */
-export const useFocusManager = (): Output => {
+export const useFocusManager = (): FocusManager => {
   const focusContext = useContext(FocusContext);
 
   return {

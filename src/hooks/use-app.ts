@@ -24,6 +24,6 @@ import { AppContext } from "../components/AppContext.js";
  * render(<Component />);
  * ```
  *
- * @returns The app context containing the exit function.
+ * @returns The app context containing the `exit` function.
  */
 export const useApp = () => useContext(AppContext);

@@ -126,14 +126,25 @@ const isCtrlKey = (code: string) => {
   ].includes(code);
 };
 
+/**
+ * Represents a parsed key press with modifier states.
+ */
 interface ParsedKey {
+  /** Name of the key (e.g., "enter", "escape", "a"). */
   name: string;
+  /** Whether the Ctrl modifier key was pressed. */
   ctrl: boolean;
+  /** Whether the Meta (Option/Command) modifier key was pressed. */
   meta: boolean;
+  /** Whether the Shift modifier key was pressed. */
   shift: boolean;
+  /** Whether the Option modifier key was pressed. */
   option: boolean;
+  /** Full key sequence including escape codes. */
   sequence: string;
+  /** Raw input string before parsing. */
   raw: string | undefined;
+  /** Internal key code for special keys. */
   code?: string;
 }
 

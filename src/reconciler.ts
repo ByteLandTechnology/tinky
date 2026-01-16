@@ -24,7 +24,7 @@ import {
   type ElementNames,
   type DOMElement,
 } from "./dom.js";
-import { styles, type Styles } from "./styles.js";
+import { applyStyles, type Styles } from "./styles.js";
 import { type OutputTransformer } from "./render-node-to-output.js";
 import type { TaffyNode } from "./taffy-node.js";
 
@@ -87,18 +87,31 @@ const diff = (before: AnyObject, after: AnyObject): AnyObject | undefined => {
   return isChanged ? changed : undefined;
 };
 
+/**
+ * Cleans up a Taffy node by freeing its resources.
+ *
+ * @param node - The Taffy node to cleanup.
+ */
 const cleanupTaffyNode = (node?: TaffyNode): void => {
   node?.free();
 };
 
 type ReconcilerProps = Record<string, unknown>;
 
+/**
+ * Host context for tracking whether we're inside a Text component.
+ */
 interface HostContext {
+  /** Whether the current node is inside a Text component. */
   isInsideText: boolean;
 }
 
 let currentUpdatePriority = NoEventPriority;
 
+/**
+ * Reference to the current root DOM element during rendering.
+ * Used to track static node state across renders.
+ */
 let currentRootNode: DOMElement | undefined;
 
 /**
@@ -181,7 +194,7 @@ export const reconciler = createReconciler<
         setStyle(node, value as Styles);
 
         if (node.taffyNode) {
-          styles(node.taffyNode, value as Styles);
+          applyStyles(node.taffyNode, value as Styles);
         }
 
         continue;
@@ -312,7 +325,7 @@ export const reconciler = createReconciler<
     }
 
     if (style && node.taffyNode) {
-      styles(node.taffyNode, style);
+      applyStyles(node.taffyNode, style);
     }
   },
   commitTextUpdate(node, _oldText, newText) {

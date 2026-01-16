@@ -34,7 +34,8 @@ export interface RenderOptions {
   stderr?: NodeJS.WriteStream;
 
   /**
-   * If true, each update will be rendered as separate output, without replacing.
+   * If true, each update will be rendered as separate output, without
+   * replacing.
    *
    * @defaultValue false
    */
@@ -80,7 +81,8 @@ export interface RenderOptions {
 
   /**
    * Enable incremental rendering mode which only updates changed lines instead
-   * of redrawing the entire output. Reduces flickering and improves performance.
+   * of redrawing the entire output. Reduces flickering and improves
+   * performance.
    *
    * @defaultValue false
    */

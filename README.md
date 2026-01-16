@@ -282,6 +282,8 @@ Tinky supports multiple color formats:
 
 ## 🔧 API Reference
 
+For complete API documentation, see the [API Docs](./docs/api/globals.md).
+
 ### render(element, options?)
 
 Render a React element to the terminal.

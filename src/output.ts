@@ -8,21 +8,7 @@ import {
   tokenize,
 } from "@alcalzone/ansi-tokenize";
 import { type OutputTransformer } from "./render-node-to-output.js";
-
-/**
- * Options for creating an Output instance.
- */
-interface Options {
-  /**
-   * Width of the output area.
-   */
-  width: number;
-
-  /**
-   * Height of the output area.
-   */
-  height: number;
-}
+import { type Dimension } from "./dimension.js";
 
 /**
  * Union type for possible operations on the output.
@@ -33,10 +19,15 @@ type Operation = WriteOperation | ClipOperation | UnclipOperation;
  * Represents a write operation to the output.
  */
 interface WriteOperation {
+  /** Operation type discriminator. */
   type: "write";
+  /** X coordinate (column) to write at. */
   x: number;
+  /** Y coordinate (row) to write at. */
   y: number;
+  /** Text content to write. */
   text: string;
+  /** Array of transformers to apply to the text. */
   transformers: OutputTransformer[];
 }
 
@@ -44,7 +35,9 @@ interface WriteOperation {
  * Represents a clip operation to restrict drawing area.
  */
 interface ClipOperation {
+  /** Operation type discriminator. */
   type: "clip";
+  /** Clipping rectangle definition. */
   clip: Clip;
 }
 
@@ -52,9 +45,13 @@ interface ClipOperation {
  * Represents a clipping rectangle.
  */
 interface Clip {
+  /** Left boundary (undefined for no limit). */
   x1: number | undefined;
+  /** Right boundary (undefined for no limit). */
   x2: number | undefined;
+  /** Top boundary (undefined for no limit). */
   y1: number | undefined;
+  /** Bottom boundary (undefined for no limit). */
   y2: number | undefined;
 }
 
@@ -62,6 +59,7 @@ interface Clip {
  * Represents an unclip operation to restore drawing area.
  */
 interface UnclipOperation {
+  /** Operation type discriminator. */
   type: "unclip";
 }
 
@@ -82,10 +80,10 @@ export class Output {
   /**
    * Creates a new Output instance.
    *
-   * @param options - Configuration options containing width and height.
+   * @param dimension - Dimensions containing width and height.
    */
-  constructor(options: Options) {
-    const { width, height } = options;
+  constructor(dimension: Dimension) {
+    const { width, height } = dimension;
 
     this.width = width;
     this.height = height;

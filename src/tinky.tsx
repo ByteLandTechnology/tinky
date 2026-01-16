@@ -104,26 +104,33 @@ export interface Options {
  * lifecycle, and terminal output.
  */
 export class Tinky {
+  /** Configuration options for this instance. */
   private readonly options: Options;
+  /** Log update instance for output. */
   private readonly log: LogUpdate;
+  /** Throttled log update instance for output. */
   private readonly throttledLog: LogUpdate;
+  /** Whether screen reader support is enabled. */
   private readonly isScreenReaderEnabled: boolean;
-
-  // Ignore last render after unmounting a tree to prevent empty output before
-  // exit
+  /** Whether the app has been unmounted. */
   private isUnmounted: boolean;
+  /** Last output string that was rendered. */
   private lastOutput: string;
+  /** Height of the last output in lines. */
   private lastOutputHeight: number;
+  /** Width of the terminal at last render. */
   private lastTerminalWidth: number;
+  /** React reconciler container. */
   private readonly container: FiberRoot;
+  /** Root DOM element for the React tree. */
   private readonly rootNode: dom.DOMElement;
-
-  // This variable is used only in debug mode to store full static output so
-  // that it's rerendered every time, not just new static parts, like in
-  // non-debug mode
+  /** Full static output for debug mode. */
   private fullStaticOutput: string;
+  /** Promise that resolves when the app exits. */
   private exitPromise?: Promise<void>;
+  /** Function to restore console after patching. */
   private restoreConsole?: () => void;
+  /** Function to unsubscribe from resize events. */
   private readonly unsubscribeResize?: () => void;
 
   /**
@@ -254,11 +261,14 @@ export class Tinky {
     this.lastTerminalWidth = currentWidth;
   };
 
+  /** Resolves the exit promise when the app unmounts. */
   resolveExitPromise: () => void = noop;
+  /** Rejects the exit promise with an error. */
   rejectExitPromise: (reason?: Error) => void = noop;
+  /** Unsubscribes from the exit event. */
   unsubscribeExit: () => void = noop;
 
-  // Track whether an error occurred during rendering
+  /** Error that occurred during rendering, if any. */
   renderError: Error | null = null;
 
   /**
