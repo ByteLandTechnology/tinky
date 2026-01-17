@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test";
-import { measureText } from "../src/measure-text.js";
+import { measureText } from "../src/utils/measure-text.js";
 
 /**
  * Verifies that `measureText` utility correctly calculates the width of a given

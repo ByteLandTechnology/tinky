@@ -1,5 +1,5 @@
 import { useMemo, useState, useLayoutEffect, type ReactNode } from "react";
-import { type Styles } from "../styles.js";
+import { type Styles } from "../core/styles.js";
 
 /**
  * Props for the Static component.

@@ -1,4 +1,4 @@
-import { type DOMElement } from "./dom.js";
+import { type DOMElement } from "../core/dom.js";
 
 /**
  * Consolidates multiple text nodes into a single string.

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { type FocusProps, FocusContext } from "../components/FocusContext.js";
+import { type FocusProps, FocusContext } from "../contexts/FocusContext.js";
 
 /**
  * Focus management control methods.

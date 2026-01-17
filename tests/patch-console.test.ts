@@ -1,5 +1,5 @@
 import { test, expect, describe, afterEach, beforeEach } from "bun:test";
-import { patchConsole } from "../src/patch-console.js";
+import { patchConsole } from "../src/utils/patch-console.js";
 
 describe("patchConsole", () => {
   let restore: (() => void) | undefined;

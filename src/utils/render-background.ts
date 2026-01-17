@@ -1,6 +1,6 @@
 import { colorize } from "./colorize.js";
-import { type DOMNode } from "./dom.js";
-import { type Output } from "./output.js";
+import { type DOMNode } from "../core/dom.js";
+import { type Output } from "../core/output.js";
 
 /**
  * Renders the background color of a node to the output.

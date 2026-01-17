@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AppContext } from "../components/AppContext.js";
+import { AppContext } from "../contexts/AppContext.js";
 
 /**
  * `useApp` is a React hook that exposes a method to manually exit the app

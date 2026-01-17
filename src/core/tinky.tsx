@@ -2,10 +2,10 @@ import process from "node:process";
 import { type ReactNode } from "react";
 import { throttle } from "es-toolkit/compat";
 import ansiEscapes from "ansi-escapes";
-import { isCI } from "./utils/check-ci.js";
+import { isCI } from "../utils/check-ci.js";
 import autoBind from "auto-bind";
-import { onExit } from "./signal-exit.js";
-import { patchConsole } from "./patch-console.js";
+import { onExit } from "../utils/signal-exit.js";
+import { patchConsole } from "../utils/patch-console.js";
 import { LegacyRoot } from "react-reconciler/constants.js";
 import { type FiberRoot } from "react-reconciler";
 import { type AvailableSpace, type Size } from "taffy-layout";
@@ -15,8 +15,8 @@ import { renderer } from "./renderer.js";
 import * as dom from "./dom.js";
 import { logUpdate, type LogUpdate } from "./log-update.js";
 import { instances } from "./instances.js";
-import { App } from "./components/App.js";
-import { AccessibilityContext } from "./components/AccessibilityContext.js";
+import { App } from "../components/App.js";
+import { AccessibilityContext } from "../contexts/AccessibilityContext.js";
 import { type TaffyNode } from "./taffy-node.js";
 
 const noop = () => {

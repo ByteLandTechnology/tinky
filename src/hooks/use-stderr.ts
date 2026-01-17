@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { StderrContext } from "../components/StderrContext.js";
+import { StderrContext } from "../contexts/StderrContext.js";
 
 /**
  * `useStderr` is a React hook that exposes the stderr stream.

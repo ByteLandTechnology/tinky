@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { parseKeypress, nonAlphanumericKeys } from "../parse-keypress.js";
-import { reconciler } from "../reconciler.js";
+import { parseKeypress, nonAlphanumericKeys } from "../utils/parse-keypress.js";
+import { reconciler } from "../core/reconciler.js";
 import { useStdin } from "./use-stdin.js";
 
 /**

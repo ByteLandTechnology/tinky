@@ -1,9 +1,9 @@
 import { forwardRef, useContext, type PropsWithChildren } from "react";
 import { type Except } from "type-fest";
-import { type Styles } from "../styles.js";
-import { type DOMElement } from "../dom.js";
-import { AccessibilityContext } from "./AccessibilityContext.js";
-import { backgroundContext } from "./BackgroundContext.js";
+import { type Styles } from "../core/styles.js";
+import { type DOMElement } from "../core/dom.js";
+import { AccessibilityContext } from "../contexts/AccessibilityContext.js";
+import { backgroundContext } from "../contexts/BackgroundContext.js";
 
 /**
  * Props for the Box component.

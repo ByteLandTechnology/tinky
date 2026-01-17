@@ -1,6 +1,6 @@
 import wrapAnsi from "wrap-ansi";
 import cliTruncate from "cli-truncate";
-import { type Styles } from "./styles.js";
+import { type Styles } from "../core/styles.js";
 
 const cache: Record<string, string> = {};
 

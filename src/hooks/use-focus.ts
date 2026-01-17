@@ -1,5 +1,5 @@
 import { useEffect, useContext, useMemo } from "react";
-import { FocusContext } from "../components/FocusContext.js";
+import { FocusContext } from "../contexts/FocusContext.js";
 import { useStdin } from "./use-stdin.js";
 
 /**

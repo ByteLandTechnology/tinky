@@ -1,5 +1,5 @@
 import { test, expect, beforeAll, afterAll } from "bun:test";
-import { patchConsole } from "../src/patch-console.js";
+import { patchConsole } from "../src/utils/patch-console.js";
 import stripAnsi from "strip-ansi";
 import { render } from "../src/index.js";
 import { createStdout } from "./helpers/create-stdout.js";

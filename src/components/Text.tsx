@@ -1,10 +1,10 @@
 import { useContext, type ReactNode } from "react";
 import chalk, { type ForegroundColorName } from "chalk";
 import { type LiteralUnion } from "type-fest";
-import { colorize } from "../colorize.js";
-import { AccessibilityContext } from "./AccessibilityContext.js";
-import { backgroundContext } from "./BackgroundContext.js";
-import { type Styles } from "../styles.js";
+import { colorize } from "../utils/colorize.js";
+import { AccessibilityContext } from "../contexts/AccessibilityContext.js";
+import { backgroundContext } from "../contexts/BackgroundContext.js";
+import { type Styles } from "../core/styles.js";
 
 /**
  * Props for the Text component.

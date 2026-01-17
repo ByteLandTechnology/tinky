@@ -1,6 +1,6 @@
 import cliBoxes from "cli-boxes";
 import chalk from "chalk";
-import { colorize } from "./colorize.js";
+import { colorize } from "../utils/colorize.js";
 import { type DOMNode } from "./dom.js";
 import { type Output } from "./output.js";
 

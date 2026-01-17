@@ -8,7 +8,7 @@ import {
   tokenize,
 } from "@alcalzone/ansi-tokenize";
 import { type OutputTransformer } from "./render-node-to-output.js";
-import { type Dimension } from "./dimension.js";
+import { type Dimension } from "../utils/dimension.js";
 
 /**
  * Union type for possible operations on the output.

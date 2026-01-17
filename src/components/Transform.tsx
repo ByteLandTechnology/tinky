@@ -1,5 +1,5 @@
 import { useContext, type ReactNode } from "react";
-import { AccessibilityContext } from "./AccessibilityContext.js";
+import { AccessibilityContext } from "../contexts/AccessibilityContext.js";
 
 /**
  * Props for the Transform component.

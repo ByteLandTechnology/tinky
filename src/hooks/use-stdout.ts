@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { StdoutContext } from "../components/StdoutContext.js";
+import { StdoutContext } from "../contexts/StdoutContext.js";
 
 /**
  * `useStdout` is a React hook that exposes the stdout stream where Tinky

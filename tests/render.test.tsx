@@ -7,7 +7,7 @@ import stripAnsi from "strip-ansi";
 import boxen from "boxen";
 import delay from "delay";
 import { render, Box, Text, useInput } from "../src/index.js";
-import { type RenderMetrics } from "../src/tinky.js";
+import { type RenderMetrics } from "../src/core/tinky.js";
 import { createStdout } from "./helpers/create-stdout.js";
 import { createStdin } from "./helpers/create-stdin.js";
 import { term } from "./helpers/term.js";

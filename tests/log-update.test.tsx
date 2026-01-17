@@ -1,6 +1,6 @@
 import { test, expect } from "bun:test";
 import ansiEscapes from "ansi-escapes";
-import { logUpdate } from "../src/log-update.js";
+import { logUpdate } from "../src/core/log-update.js";
 import { createStdout } from "./helpers/create-stdout.js";
 
 /**

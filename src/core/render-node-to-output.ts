@@ -1,11 +1,11 @@
 import widestLine from "widest-line";
 import indentString from "indent-string";
 import { Display } from "taffy-layout";
-import { wrapText } from "./wrap-text.js";
-import { getMaxWidth } from "./get-max-width.js";
-import { squashTextNodes } from "./squash-text-nodes.js";
+import { wrapText } from "../utils/wrap-text.js";
+import { getMaxWidth } from "../utils/get-max-width.js";
+import { squashTextNodes } from "../utils/squash-text-nodes.js";
 import { renderBorder } from "./render-border.js";
-import { renderBackground } from "./render-background.js";
+import { renderBackground } from "../utils/render-background.js";
 import { type DOMElement } from "./dom.js";
 import { type Output } from "./output.js";
 

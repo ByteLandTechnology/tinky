@@ -1,9 +1,9 @@
 import { type AvailableSpace } from "taffy-layout";
 import stringWidth from "string-width";
-import { measureText } from "./measure-text.js";
+import { measureText } from "../utils/measure-text.js";
 import { type Styles } from "./styles.js";
-import { wrapText } from "./wrap-text.js";
-import { squashTextNodes } from "./squash-text-nodes.js";
+import { wrapText } from "../utils/wrap-text.js";
+import { squashTextNodes } from "../utils/squash-text-nodes.js";
 import { type OutputTransformer } from "./render-node-to-output.js";
 import { TaffyNode } from "./taffy-node.js";
 

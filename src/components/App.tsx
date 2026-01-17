@@ -2,11 +2,11 @@ import { EventEmitter } from "node:events";
 import process from "node:process";
 import { PureComponent, type ReactNode } from "react";
 import * as cliCursor from "../utils/cli-cursor.js";
-import { AppContext } from "./AppContext.js";
-import { StdinContext } from "./StdinContext.js";
-import { StdoutContext } from "./StdoutContext.js";
-import { StderrContext } from "./StderrContext.js";
-import { FocusContext } from "./FocusContext.js";
+import { AppContext } from "../contexts/AppContext.js";
+import { StdinContext } from "../contexts/StdinContext.js";
+import { StdoutContext } from "../contexts/StdoutContext.js";
+import { StderrContext } from "../contexts/StderrContext.js";
+import { FocusContext } from "../contexts/FocusContext.js";
 import { ErrorOverview } from "./ErrorOverview.js";
 
 const tab = "\t";
