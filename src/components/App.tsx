@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import process from "node:process";
 import { PureComponent, type ReactNode } from "react";
-import cliCursor from "cli-cursor";
+import * as cliCursor from "../utils/cli-cursor.js";
 import { AppContext } from "./AppContext.js";
 import { StdinContext } from "./StdinContext.js";
 import { StdoutContext } from "./StdoutContext.js";

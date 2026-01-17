@@ -1,6 +1,6 @@
 import { type Writable } from "node:stream";
 import ansiEscapes from "ansi-escapes";
-import cliCursor from "cli-cursor";
+import * as cliCursor from "./utils/cli-cursor.js";
 
 /**
  * Interface definition for LogUpdate function and its methods.
