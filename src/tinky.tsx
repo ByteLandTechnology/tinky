@@ -201,12 +201,9 @@ export class Tinky {
     );
 
     // Unmount when process exits
-    this.unsubscribeExit = onExit(
-      () => {
-        this.unmount();
-      },
-      { alwaysLast: false },
-    );
+    this.unsubscribeExit = onExit(() => {
+      this.unmount();
+    });
 
     if (process.env["DEV"] === "true") {
       reconciler.injectIntoDevTools({
