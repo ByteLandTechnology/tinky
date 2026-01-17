@@ -1,3 +1,9 @@
+# [1.1.0](https://github.com/ByteLandTechnology/tinky/compare/v1.0.0...v1.1.0) (2026-01-17)
+
+### Features
+
+- replace patch-console with internal implementation ([b9636a0](https://github.com/ByteLandTechnology/tinky/commit/b9636a05f9570ae8b654fc91b6521b8ad3bd3e8d))
+
 # 1.0.0 (2026-01-16)
 
 ### Features
