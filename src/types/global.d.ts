@@ -1,7 +1,7 @@
 import { type ReactNode, type Key, type Ref } from "react";
 import { type Except } from "type-fest";
-import { type DOMElement } from "./core/dom.js";
-import { type Styles } from "./core/styles.js";
+import { type DOMElement } from "../core/dom.js";
+import { type Styles } from "../core/styles.js";
 
 declare module "react" {
   namespace JSX {
