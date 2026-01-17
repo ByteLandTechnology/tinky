@@ -5,7 +5,7 @@ import ansiEscapes from "ansi-escapes";
 import isInCi from "is-in-ci";
 import autoBind from "auto-bind";
 import { onExit } from "./signal-exit.js";
-import patchConsole from "patch-console";
+import { patchConsole } from "./patch-console.js";
 import { LegacyRoot } from "react-reconciler/constants.js";
 import { type FiberRoot } from "react-reconciler";
 import { type AvailableSpace, type Size } from "taffy-layout";
