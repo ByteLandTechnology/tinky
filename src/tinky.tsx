@@ -2,7 +2,7 @@ import process from "node:process";
 import { type ReactNode } from "react";
 import { throttle } from "es-toolkit/compat";
 import ansiEscapes from "ansi-escapes";
-import isInCi from "is-in-ci";
+import { isCI } from "./utils/check-ci.js";
 import autoBind from "auto-bind";
 import { onExit } from "./signal-exit.js";
 import { patchConsole } from "./patch-console.js";
@@ -221,7 +221,7 @@ export class Tinky {
       this.patchConsole();
     }
 
-    if (!isInCi) {
+    if (!isCI) {
       options.stdout.on("resize", this.resized);
 
       this.unsubscribeResize = () => {
@@ -339,7 +339,7 @@ export class Tinky {
       return;
     }
 
-    if (isInCi) {
+    if (isCI) {
       if (hasStaticOutput) {
         this.options.stdout.write(staticOutput);
       }
@@ -462,7 +462,7 @@ export class Tinky {
       return;
     }
 
-    if (isInCi) {
+    if (isCI) {
       this.options.stdout.write(data);
       return;
     }
@@ -488,7 +488,7 @@ export class Tinky {
       return;
     }
 
-    if (isInCi) {
+    if (isCI) {
       this.options.stderr.write(data);
       return;
     }
@@ -527,7 +527,7 @@ export class Tinky {
 
     // CIs don't handle erasing ansi escapes well, so it's better to
     // only render last frame of non-static output
-    if (isInCi) {
+    if (isCI) {
       this.options.stdout.write(this.lastOutput + "\n");
     } else if (!this.options.debug) {
       this.log.done();
@@ -578,7 +578,7 @@ export class Tinky {
    * Clears the output.
    */
   clear(): void {
-    if (!isInCi && !this.options.debug) {
+    if (!isCI && !this.options.debug) {
       this.log.clear();
     }
   }
