@@ -1,3 +1,9 @@
+## [1.2.2](https://github.com/ByteLandTechnology/tinky/compare/v1.2.1...v1.2.2) (2026-01-18)
+
+### 📦 Build
+
+- install conventional-changelog dependencies and fix changelog format ([62eedbc](https://github.com/ByteLandTechnology/tinky/commit/62eedbc8f722a4db5c814e9fde3e44c092bb2f86))
+
 # [1.2.1](https://github.com/ByteLandTechnology/tinky/compare/v1.2.0...v1.2.1) (2026-01-18)
 
 ### 📦 Build
