@@ -1,5 +1,5 @@
 import cliBoxes from "cli-boxes";
-import chalk from "chalk";
+import ansis from "ansis";
 import { colorize } from "../utils/colorize.js";
 import { type DOMNode } from "./dom.js";
 import { type Output } from "./output.js";
@@ -69,7 +69,7 @@ export const renderBorder = (
       : undefined;
 
     if (showTopBorder && dimTopBorderColor) {
-      topBorder = chalk.dim(topBorder);
+      topBorder = ansis.dim(topBorder);
     }
 
     let verticalBorderHeight = height;
@@ -87,7 +87,7 @@ export const renderBorder = (
     ).repeat(verticalBorderHeight);
 
     if (dimLeftBorderColor) {
-      leftBorder = chalk.dim(leftBorder);
+      leftBorder = ansis.dim(leftBorder);
     }
 
     let rightBorder = (
@@ -95,7 +95,7 @@ export const renderBorder = (
     ).repeat(verticalBorderHeight);
 
     if (dimRightBorderColor) {
-      rightBorder = chalk.dim(rightBorder);
+      rightBorder = ansis.dim(rightBorder);
     }
 
     let bottomBorder = showBottomBorder
@@ -109,7 +109,7 @@ export const renderBorder = (
       : undefined;
 
     if (showBottomBorder && dimBottomBorderColor) {
-      bottomBorder = chalk.dim(bottomBorder);
+      bottomBorder = ansis.dim(bottomBorder);
     }
 
     const offsetY = showTopBorder ? 1 : 0;

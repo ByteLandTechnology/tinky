@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import { test, expect, beforeAll } from "bun:test";
-import chalk from "chalk";
+import ansis from "ansis";
 import { spy } from "sinon";
 import ansiEscapes from "ansi-escapes";
 import {
@@ -20,7 +20,7 @@ import { renderToString } from "./helpers/render-to-string.js";
 import { run } from "./helpers/term.js";
 
 beforeAll(() => {
-  chalk.level = 3;
+  ansis.level = 3;
 });
 
 /**
@@ -582,7 +582,7 @@ test("render only new items in static output on final render", () => {
 test("ensure wrap-ansi doesn’t trim leading whitespace", () => {
   const output = renderToString(<Text color="red">{" ERROR "}</Text>);
 
-  expect(output).toBe(chalk.red(" ERROR "));
+  expect(output).toBe(ansis.red(" ERROR "));
 });
 
 /**
@@ -601,7 +601,7 @@ test("replace child node with text", () => {
     debug: true,
   });
 
-  expect(stdout.get()).toBe(chalk.green("test"));
+  expect(stdout.get()).toBe(ansis.green("test"));
 
   rerender(<Dynamic replace />);
   expect(stdout.get()).toBe("x");

@@ -32,7 +32,7 @@ A label for the element for screen readers.
 
 ### backgroundColor?
 
-> `readonly` `optional` **backgroundColor**: `LiteralUnion`\<keyof ForegroundColor, `string`\>
+> `readonly` `optional` **backgroundColor**: `LiteralUnion`\<[`ForegroundColorName`](../type-aliases/ForegroundColorName.md), `string`\>
 
 Same as `color`, but for the background.
 
@@ -64,9 +64,9 @@ Children of the component.
 
 ### color?
 
-> `readonly` `optional` **color**: `LiteralUnion`\<keyof ForegroundColor, `string`\>
+> `readonly` `optional` **color**: `LiteralUnion`\<[`ForegroundColorName`](../type-aliases/ForegroundColorName.md), `string`\>
 
-Change text color. Tinky uses Chalk under the hood, so all its functionality
+Change text color. Tinky uses Ansis under the hood, so all its functionality
 is supported.
 
 #### Inherited from

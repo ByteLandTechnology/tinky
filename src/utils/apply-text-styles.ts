@@ -1,13 +1,13 @@
-import chalk, { type ForegroundColorName } from "chalk";
+import ansis from "ansis";
 import { type LiteralUnion } from "type-fest";
-import { colorize } from "./colorize.js";
+import { colorize, type ForegroundColorName } from "./colorize.js";
 
 /**
  * Common text styling props used by components like Text and Separator.
  */
 export interface TextStyles {
   /**
-   * Change text color. Tinky uses Chalk under the hood, so all its functionality
+   * Change text color. Tinky uses Ansis under the hood, so all its functionality
    * is supported.
    */
   readonly color?: LiteralUnion<ForegroundColorName, string>;
@@ -49,7 +49,7 @@ export interface TextStyles {
 }
 
 /**
- * Applies text styles (color, bold, etc.) to a string using Chalk.
+ * Applies text styles (color, bold, etc.) to a string using Ansis.
  *
  * @param text - The text to apply styles to.
  * @param styles - The styles to apply.
@@ -57,7 +57,7 @@ export interface TextStyles {
  */
 export const applyTextStyles = (text: string, styles: TextStyles): string => {
   if (styles.dimColor) {
-    text = chalk.dim(text);
+    text = ansis.dim(text);
   }
 
   if (styles.color) {
@@ -69,23 +69,23 @@ export const applyTextStyles = (text: string, styles: TextStyles): string => {
   }
 
   if (styles.bold) {
-    text = chalk.bold(text);
+    text = ansis.bold(text);
   }
 
   if (styles.italic) {
-    text = chalk.italic(text);
+    text = ansis.italic(text);
   }
 
   if (styles.underline) {
-    text = chalk.underline(text);
+    text = ansis.underline(text);
   }
 
   if (styles.strikethrough) {
-    text = chalk.strikethrough(text);
+    text = ansis.strikethrough(text);
   }
 
   if (styles.inverse) {
-    text = chalk.inverse(text);
+    text = ansis.inverse(text);
   }
 
   return text;

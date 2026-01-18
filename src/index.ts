@@ -33,6 +33,7 @@ export {
 export { useIsScreenReaderEnabled } from "./hooks/use-is-screen-reader-enabled.js";
 export { measureElement } from "./utils/measure-element.js";
 export { type Dimension } from "./utils/dimension.js";
+export { type ForegroundColorName } from "./utils/colorize.js";
 export { applyTextStyles, type TextStyles } from "./utils/apply-text-styles.js";
 export {
   type DOMElement,

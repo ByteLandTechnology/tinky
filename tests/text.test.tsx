@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test";
-import chalk from "chalk";
+import ansis from "ansis";
 import { render, Box, Text } from "../src/index.js";
 import { renderToString } from "./helpers/render-to-string.js";
 import {
@@ -33,7 +33,7 @@ test("<Text> with null children", () => {
  */
 test("text with standard color", () => {
   const output = renderToString(<Text color="green">Test</Text>);
-  expect(output).toBe(chalk.green("Test"));
+  expect(output).toBe(ansis.green("Test"));
 });
 
 /**
@@ -48,7 +48,7 @@ test("text with dim+bold", () => {
   );
   expect(output).toEqual(
     styledCharsToString(
-      styledCharsFromTokens(tokenize(chalk.bold.dim("Test"))),
+      styledCharsFromTokens(tokenize(ansis.bold.dim("Test"))),
     ),
   );
 });
@@ -64,7 +64,7 @@ test("text with dimmed color", () => {
   );
 
   // Handle non-deterministic order of ANSI codes (dim+green or green+dim)
-  expect(output).toBe(chalk.green.dim("Test"));
+  expect(output).toBe(ansis.green.dim("Test"));
 });
 
 /**
@@ -72,7 +72,7 @@ test("text with dimmed color", () => {
  */
 test("text with hex color", () => {
   const output = renderToString(<Text color="#FF8800">Test</Text>);
-  expect(output).toBe(chalk.hex("#FF8800")("Test"));
+  expect(output).toBe(ansis.hex("#FF8800")("Test"));
 });
 
 /**
@@ -80,7 +80,7 @@ test("text with hex color", () => {
  */
 test("text with rgb color", () => {
   const output = renderToString(<Text color="rgb(255, 136, 0)">Test</Text>);
-  expect(output).toBe(chalk.rgb(255, 136, 0)("Test"));
+  expect(output).toBe(ansis.rgb(255, 136, 0)("Test"));
 });
 
 /**
@@ -88,7 +88,7 @@ test("text with rgb color", () => {
  */
 test("text with ansi256 color", () => {
   const output = renderToString(<Text color="ansi256(194)">Test</Text>);
-  expect(output).toBe(chalk.ansi256(194)("Test"));
+  expect(output).toBe(ansis.fg(194)("Test"));
 });
 
 /**
@@ -96,7 +96,7 @@ test("text with ansi256 color", () => {
  */
 test("text with standard background color", () => {
   const output = renderToString(<Text backgroundColor="green">Test</Text>);
-  expect(output).toBe(chalk.bgGreen("Test"));
+  expect(output).toBe(ansis.bgGreen("Test"));
 });
 
 /**
@@ -104,7 +104,7 @@ test("text with standard background color", () => {
  */
 test("text with hex background color", () => {
   const output = renderToString(<Text backgroundColor="#FF8800">Test</Text>);
-  expect(output).toBe(chalk.bgHex("#FF8800")("Test"));
+  expect(output).toBe(ansis.bgHex("#FF8800")("Test"));
 });
 
 /**
@@ -115,7 +115,7 @@ test("text with rgb background color", () => {
     <Text backgroundColor="rgb(255, 136, 0)">Test</Text>,
   );
 
-  expect(output).toBe(chalk.bgRgb(255, 136, 0)("Test"));
+  expect(output).toBe(ansis.bgRgb(255, 136, 0)("Test"));
 });
 
 /**
@@ -126,7 +126,7 @@ test("text with ansi256 background color", () => {
     <Text backgroundColor="ansi256(194)">Test</Text>,
   );
 
-  expect(output).toBe(chalk.bgAnsi256(194)("Test"));
+  expect(output).toBe(ansis.bg(194)("Test"));
 });
 
 /**
@@ -135,7 +135,7 @@ test("text with ansi256 background color", () => {
  */
 test("text with inversion", () => {
   const output = renderToString(<Text inverse>Test</Text>);
-  expect(output).toBe(chalk.inverse("Test"));
+  expect(output).toBe(ansis.inverse("Test"));
 });
 
 /**

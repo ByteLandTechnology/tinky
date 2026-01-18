@@ -1,7 +1,46 @@
-import chalk, {
-  type ForegroundColorName,
-  type BackgroundColorName,
-} from "chalk";
+import ansis from "ansis";
+
+/**
+ * Supported foreground color names.
+ */
+export type ForegroundColorName =
+  | "black"
+  | "blue"
+  | "blueBright"
+  | "cyan"
+  | "cyanBright"
+  | "gray"
+  | "green"
+  | "greenBright"
+  | "magenta"
+  | "magentaBright"
+  | "red"
+  | "redBright"
+  | "white"
+  | "whiteBright"
+  | "yellow"
+  | "yellowBright";
+
+/**
+ * Supported background color names.
+ */
+export type BackgroundColorName =
+  | "bgBlack"
+  | "bgBlue"
+  | "bgBlueBright"
+  | "bgCyan"
+  | "bgCyanBright"
+  | "bgGray"
+  | "bgGreen"
+  | "bgGreenBright"
+  | "bgMagenta"
+  | "bgMagentaBright"
+  | "bgRed"
+  | "bgRedBright"
+  | "bgWhite"
+  | "bgWhiteBright"
+  | "bgYellow"
+  | "bgYellowBright";
 
 /**
  * Type representing the target of the color application (foreground or
@@ -13,11 +52,11 @@ const rgbRegex = /^rgb\(\s?(\d+),\s?(\d+),\s?(\d+)\s?\)$/;
 const ansiRegex = /^ansi256\(\s?(\d+)\s?\)$/;
 
 const isNamedColor = (color: string): color is ForegroundColorName => {
-  return color in chalk;
+  return color in ansis;
 };
 
 /**
- * Applies a color to a string using Chalk.
+ * Applies a color to a string using Ansis.
  * Supports named colors, hex codes, RGB values, and ANSI-256 color codes.
  *
  * @param str - The string to colorize.
@@ -36,20 +75,20 @@ export const colorize = (
 
   if (isNamedColor(color)) {
     if (type === "foreground") {
-      return chalk[color](str);
+      return ansis[color](str);
     }
 
     const methodName = `bg${
       color.charAt(0).toUpperCase() + color.slice(1)
     }` as BackgroundColorName;
 
-    return chalk[methodName](str);
+    return ansis[methodName](str);
   }
 
   if (color.startsWith("#")) {
     return type === "foreground"
-      ? chalk.hex(color)(str)
-      : chalk.bgHex(color)(str);
+      ? ansis.hex(color)(str)
+      : ansis.bgHex(color)(str);
   }
 
   if (color.startsWith("ansi256")) {
@@ -61,9 +100,7 @@ export const colorize = (
 
     const value = Number(matches[1]);
 
-    return type === "foreground"
-      ? chalk.ansi256(value)(str)
-      : chalk.bgAnsi256(value)(str);
+    return type === "foreground" ? ansis.fg(value)(str) : ansis.bg(value)(str);
   }
 
   if (color.startsWith("rgb")) {
@@ -78,8 +115,8 @@ export const colorize = (
     const thirdValue = Number(matches[3]);
 
     return type === "foreground"
-      ? chalk.rgb(firstValue, secondValue, thirdValue)(str)
-      : chalk.bgRgb(firstValue, secondValue, thirdValue)(str);
+      ? ansis.rgb(firstValue, secondValue, thirdValue)(str)
+      : ansis.bgRgb(firstValue, secondValue, thirdValue)(str);
   }
 
   return str;

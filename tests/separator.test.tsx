@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test";
-import chalk from "chalk";
+import ansis from "ansis";
 import { Box, Separator, Text } from "../src/index.js";
 import { renderToString } from "./helpers/render-to-string.js";
 
@@ -50,7 +50,7 @@ test("Separator supports color prop", () => {
       <Separator char="-" color="red" />
     </Box>,
   );
-  expect(output).toBe(chalk.red("-----"));
+  expect(output).toBe(ansis.red("-----"));
 });
 
 /**
@@ -62,7 +62,7 @@ test("Separator supports backgroundColor prop", () => {
       <Separator char=" " backgroundColor="blue" />
     </Box>,
   );
-  expect(output).toBe(chalk.bgBlue("     "));
+  expect(output).toBe(ansis.bgBlue("     "));
 });
 
 /**
@@ -74,7 +74,7 @@ test("Separator supports dimColor prop", () => {
       <Separator char="-" dimColor />
     </Box>,
   );
-  expect(output).toBe(chalk.dim("-----"));
+  expect(output).toBe(ansis.dim("-----"));
 });
 
 /**
@@ -86,7 +86,7 @@ test("Separator supports bold style", () => {
       <Separator char="-" bold />
     </Box>,
   );
-  expect(output).toBe(chalk.bold("-----"));
+  expect(output).toBe(ansis.bold("-----"));
 });
 
 /**
@@ -98,7 +98,7 @@ test("Separator supports italic style", () => {
       <Separator char="-" italic />
     </Box>,
   );
-  expect(output).toBe(chalk.italic("-----"));
+  expect(output).toBe(ansis.italic("-----"));
 });
 
 /**
@@ -110,7 +110,7 @@ test("Separator supports underline style", () => {
       <Separator char="-" underline />
     </Box>,
   );
-  expect(output).toBe(chalk.underline("-----"));
+  expect(output).toBe(ansis.underline("-----"));
 });
 
 /**
@@ -122,7 +122,7 @@ test("Separator supports strikethrough style", () => {
       <Separator char="-" strikethrough />
     </Box>,
   );
-  expect(output).toBe(chalk.strikethrough("-----"));
+  expect(output).toBe(ansis.strikethrough("-----"));
 });
 
 /**
@@ -134,7 +134,7 @@ test("Separator supports inverse style", () => {
       <Separator char="-" inverse />
     </Box>,
   );
-  expect(output).toBe(chalk.inverse("-----"));
+  expect(output).toBe(ansis.inverse("-----"));
 });
 
 /**
@@ -149,7 +149,7 @@ test("Separator supports combined styles", () => {
 
   // Implementation applies styles in order: color -> bold -> underline
   // So we expect: underline(bold(red("-----")))
-  expect(output).toBe(chalk.underline(chalk.bold(chalk.red("-----"))));
+  expect(output).toBe(ansis.underline(ansis.bold(ansis.red("-----"))));
 });
 
 /**

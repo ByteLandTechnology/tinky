@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { test, expect } from "bun:test";
-import chalk from "chalk";
+import ansis from "ansis";
 import { Box, Text, render } from "../src/index.js";
 import { createStdout } from "./helpers/create-stdout.js";
 
@@ -305,7 +305,7 @@ test("replace child node with text", () => {
     debug: true,
   });
 
-  expect(stdout.get()).toBe(chalk.green("test"));
+  expect(stdout.get()).toBe(ansis.green("test"));
 
   rerender(<Dynamic replace />);
   expect(stdout.get()).toBe("x");

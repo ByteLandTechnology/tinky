@@ -8,7 +8,7 @@
 
 > **applyTextStyles**(`text`, `styles`): `string`
 
-Applies text styles (color, bold, etc.) to a string using Chalk.
+Applies text styles (color, bold, etc.) to a string using Ansis.
 
 ## Parameters
 

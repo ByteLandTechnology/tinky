@@ -1,8 +1,8 @@
 import { test, expect } from "bun:test";
 import boxen from "boxen";
-import indentString from "indent-string";
+
 import cliBoxes from "cli-boxes";
-import chalk from "chalk";
+import ansis from "ansis";
 import { render, Box, Text } from "../src/index.js";
 import { renderToString } from "./helpers/render-to-string.js";
 import { createStdout } from "./helpers/create-stdout.js";
@@ -366,13 +366,16 @@ test("nested boxes", () => {
     </Box>,
   );
 
-  const nestedBox = indentString(
-    boxen("\n Hello World \n", { borderStyle: "round" }),
-    1,
-  );
-
   expect(output).toBe(
-    boxen(`${" ".repeat(38)}\n${nestedBox}\n`, { borderStyle: "round" }),
+    `╭──────────────────────────────────────╮
+│                                      │
+│ ╭─────────────╮                      │
+│ │             │                      │
+│ │ Hello World │                      │
+│ │             │                      │
+│ ╰─────────────╯                      │
+│                                      │
+╰──────────────────────────────────────╯`,
   );
 });
 
@@ -395,22 +398,13 @@ test("nested boxes - fit-content box with wide characters on flex-direction row"
     </Box>,
   );
 
-  const box1 = boxen("ミスター", { borderStyle: "round" });
-  const box2 = boxen("スポック", { borderStyle: "round" });
-  const box3 = boxen("カーク船長", { borderStyle: "round" });
-
-  const expected = boxen(
-    box1
-      .split("\n")
-      .map(
-        (line, index) =>
-          line + box2.split("\n")[index] + box3.split("\n")[index],
-      )
-      .join("\n"),
-    { borderStyle: "round" },
+  expect(output).toBe(
+    `╭────────────────────────────────╮
+│╭────────╮╭────────╮╭──────────╮│
+││ミスター││スポック││カーク船長││
+│╰────────╯╰────────╯╰──────────╯│
+╰────────────────────────────────╯`,
   );
-
-  expect(output).toBe(expected);
 });
 
 /**
@@ -744,7 +738,7 @@ test("change color of top border", () => {
   expect(output).toBe(
     [
       "Above",
-      chalk.green(
+      ansis.green(
         `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
           cliBoxes.round.topRight
         }`,
@@ -779,7 +773,7 @@ test("change color of bottom border", () => {
         cliBoxes.round.topRight
       }`,
       `${cliBoxes.round.left}Content${cliBoxes.round.right}`,
-      chalk.green(
+      ansis.green(
         `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
           cliBoxes.round.bottomRight
         }`,
@@ -809,7 +803,7 @@ test("change color of left border", () => {
       `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
         cliBoxes.round.topRight
       }`,
-      `${chalk.green(cliBoxes.round.left)}Content${cliBoxes.round.right}`,
+      `${ansis.green(cliBoxes.round.left)}Content${cliBoxes.round.right}`,
       `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
         cliBoxes.round.bottomRight
       }`,
@@ -838,7 +832,7 @@ test("change color of right border", () => {
       `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
         cliBoxes.round.topRight
       }`,
-      `${cliBoxes.round.left}Content${chalk.green(cliBoxes.round.right)}`,
+      `${cliBoxes.round.left}Content${ansis.green(cliBoxes.round.right)}`,
       `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
         cliBoxes.round.bottomRight
       }`,
@@ -908,7 +902,7 @@ test("dim top border color", () => {
   expect(output).toBe(
     [
       "Above",
-      chalk.dim(
+      ansis.dim(
         `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
           cliBoxes.round.topRight
         }`,
@@ -944,7 +938,7 @@ test("dim bottom border color", () => {
         cliBoxes.round.topRight
       }`,
       `${cliBoxes.round.left}Content${cliBoxes.round.right}`,
-      chalk.dim(
+      ansis.dim(
         `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
           cliBoxes.round.bottomRight
         }`,
@@ -975,7 +969,7 @@ test("dim left border color", () => {
       `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
         cliBoxes.round.topRight
       }`,
-      `${chalk.dim(cliBoxes.round.left)}Content${cliBoxes.round.right}`,
+      `${ansis.dim(cliBoxes.round.left)}Content${cliBoxes.round.right}`,
       `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
         cliBoxes.round.bottomRight
       }`,
@@ -1005,7 +999,7 @@ test("dim right border color", () => {
       `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
         cliBoxes.round.topRight
       }`,
-      `${cliBoxes.round.left}Content${chalk.dim(cliBoxes.round.right)}`,
+      `${cliBoxes.round.left}Content${ansis.dim(cliBoxes.round.right)}`,
       `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
         cliBoxes.round.bottomRight
       }`,

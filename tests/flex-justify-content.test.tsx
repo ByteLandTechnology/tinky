@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test";
-import chalk from "chalk";
+import ansis from "ansis";
 import { Box, Text } from "../src/index.js";
 import { renderToString } from "./helpers/render-to-string.js";
 
@@ -119,7 +119,7 @@ test("row - align colored text node when text is squashed", () => {
     </Box>,
   );
 
-  expect(output).toBe(`    ${chalk.green("X")}`);
+  expect(output).toBe(`    ${ansis.green("X")}`);
 });
 
 /**

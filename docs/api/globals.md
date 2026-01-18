@@ -40,6 +40,7 @@
 - [DOMNodeAttribute](type-aliases/DOMNodeAttribute.md)
 - [ElementNames](type-aliases/ElementNames.md)
 - [Events](type-aliases/Events.md)
+- [ForegroundColorName](type-aliases/ForegroundColorName.md)
 - [InputHandler](type-aliases/InputHandler.md)
 - [NodeNames](type-aliases/NodeNames.md)
 - [OutputTransformer](type-aliases/OutputTransformer.md)

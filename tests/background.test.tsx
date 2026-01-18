@@ -1,20 +1,20 @@
 import { test, expect } from "bun:test";
-import chalk from "chalk";
+import ansis from "ansis";
 import { render, Box, Text } from "../src/index.js";
 import { renderToString } from "./helpers/render-to-string.js";
 import { createStdout } from "./helpers/create-stdout.js";
 
 // ANSI escape sequences for background colors
-// Note: We test against raw ANSI codes rather than chalk predicates because:
+// Note: We test against raw ANSI codes because:
 // 1. Different color reset patterns:
-//    - Chalk: '\u001b[43mHello \u001b[49m\u001b[43mWorld\u001b[49m'
+//    - Ansis: '\u001b[43mHello \u001b[49m\u001b[43mWorld\u001b[49m'
 //      (individual resets)
 //    - Tinky:   '\u001b[43mHello World\u001b[49m' (continuous blocks)
-// 2. Background space fills that chalk doesn't generate:
+// 2. Background space fills that standard libraries don't generate:
 //    - Tinky: '\u001b[41mHello     \u001b[49m\n\u001b[41m          \u001b[49m'
 //      (fills entire Box area)
 // 3. Context-aware color transitions:
-//    - Chalk:
+//    - Ansis:
 //      '\u001b[43mOuter: \u001b[49m\u001b[44mInner: \u001b[49m\u001b[41mExplicit\u001b[49m'
 //    - Tinky:   '\u001b[43mOuter: \u001b[44mInner: \u001b[41mExplicit\u001b[49m'
 //      (no intermediate resets)
@@ -52,7 +52,7 @@ test("Text inherits parent Box background color", () => {
     </Box>,
   );
 
-  expect(output).toBe(chalk.bgGreen("Hello World"));
+  expect(output).toBe(ansis.bgGreen("Hello World"));
 });
 
 /**
@@ -67,7 +67,7 @@ test("Text explicit background color overrides inherited", () => {
     </Box>,
   );
 
-  expect(output).toBe(chalk.bgBlue("Hello World"));
+  expect(output).toBe(ansis.bgBlue("Hello World"));
 });
 
 /**
@@ -84,7 +84,7 @@ test("Nested Box background inheritance", () => {
     </Box>,
   );
 
-  expect(output).toBe(chalk.bgBlue("Hello World"));
+  expect(output).toBe(ansis.bgBlue("Hello World"));
 });
 
 /**
@@ -116,7 +116,7 @@ test("Multiple Text elements inherit same background", () => {
   );
 
   // Text nodes are rendered as a single block with shared background
-  expect(output).toBe(chalk.bgYellow("Hello World"));
+  expect(output).toBe(ansis.bgYellow("Hello World"));
 });
 
 /**
@@ -136,7 +136,7 @@ test("Mixed text with and without background inheritance", () => {
   );
 
   expect(output).toBe(
-    chalk.bgGreen("Inherited ") + "No BG " + chalk.bgRed("Red BG"),
+    ansis.bgGreen("Inherited ") + "No BG " + ansis.bgRed("Red BG"),
   );
 });
 
@@ -179,7 +179,7 @@ test("Box background with standard color", () => {
     </Box>,
   );
 
-  expect(output).toBe(chalk.bgRed("Hello"));
+  expect(output).toBe(ansis.bgRed("Hello"));
 });
 
 /**
@@ -194,7 +194,7 @@ test("Box background with hex color", () => {
     </Box>,
   );
 
-  expect(output).toBe(chalk.bgHex("#FF0000")("Hello"));
+  expect(output).toBe(ansis.bgHex("#FF0000")("Hello"));
 });
 
 /**
@@ -209,7 +209,7 @@ test("Box background with rgb color", () => {
     </Box>,
   );
 
-  expect(output).toBe(chalk.bgRgb(255, 0, 0)("Hello"));
+  expect(output).toBe(ansis.bgRgb(255, 0, 0)("Hello"));
 });
 
 /**
@@ -224,7 +224,7 @@ test("Box background with ansi256 color", () => {
     </Box>,
   );
 
-  expect(output).toBe(chalk.bgAnsi256(9)("Hello"));
+  expect(output).toBe(ansis.bg(9)("Hello"));
 });
 
 /**
@@ -239,7 +239,7 @@ test("Box background with wide characters", () => {
     </Box>,
   );
 
-  expect(output).toBe(chalk.bgYellow("こんにちは"));
+  expect(output).toBe(ansis.bgYellow("こんにちは"));
 });
 
 /**
@@ -254,7 +254,7 @@ test("Box background with emojis", () => {
     </Box>,
   );
 
-  expect(output).toBe(chalk.bgRed("🎉🎊"));
+  expect(output).toBe(ansis.bgRed("🎉🎊"));
 });
 
 /**
@@ -526,7 +526,7 @@ test("Box background updates on rerender", () => {
   expect(stdout.get()).toBe("Hello");
 
   rerender(<Test bgColor="green" />);
-  expect(stdout.get()).toBe(chalk.bgGreen("Hello"));
+  expect(stdout.get()).toBe(ansis.bgGreen("Hello"));
 
   rerender(<Test />);
   expect(stdout.get()).toBe("Hello");
