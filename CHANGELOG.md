@@ -1,3 +1,7 @@
+## <small>1.1.2 (2026-01-18)</small>
+
+- refactor(types): simplify IO stream interfaces ([477a6ce](https://github.com/ByteLandTechnology/tinky/commit/477a6ce))
+
 ## <small>1.1.1 (2026-01-18)</small>
 
 - build: enhance semantic-release configuration ([7b46092](https://github.com/ByteLandTechnology/tinky/commit/7b46092))
