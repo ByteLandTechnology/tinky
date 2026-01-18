@@ -12,7 +12,7 @@ Props for the StdinContext.
 
 ### internal_eventEmitter
 
-> `readonly` **internal_eventEmitter**: `EventEmitter`
+> `readonly` **internal_eventEmitter**: [`EventEmitter`](EventEmitter.md)
 
 Internal event emitter for handling input events.
 
@@ -59,7 +59,7 @@ nothing.
 
 ### stdin
 
-> `readonly` **stdin**: `ReadStream`
+> `readonly` **stdin**: [`ReadStream`](ReadStream.md)
 
 The stdin stream passed to `render()` in `options.stdin`, or
 `process.stdin` by default. Useful if your app needs to handle user input.

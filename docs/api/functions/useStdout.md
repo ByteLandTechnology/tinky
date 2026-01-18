@@ -17,7 +17,7 @@ The stdout context.
 
 ### stdout
 
-> `readonly` **stdout**: `WriteStream`
+> `readonly` **stdout**: [`WriteStream`](../interfaces/WriteStream.md)
 
 Stdout stream passed to `render()` in `options.stdout` or `process.stdout`
 by default.

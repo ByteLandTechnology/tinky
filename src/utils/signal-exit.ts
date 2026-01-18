@@ -1,6 +1,6 @@
-import process from "node:process";
+import { process } from "./node-adapater";
 
-type Callback = (code?: number | null, signal?: NodeJS.Signals | null) => void;
+type Callback = (code?: number | null, signal?: string | null) => void;
 
 // Track all registered listeners
 const callbacks = new Set<Callback>();
@@ -11,14 +11,14 @@ let isAttached = false;
  *
  * @param signal - The signal that triggered the exit.
  */
-const handleSignal = (signal: NodeJS.Signals) => {
+const handleSignal = (signal: unknown) => {
   for (const callback of callbacks) {
-    callback(null, signal);
+    callback(null, typeof signal === "string" ? signal : null);
   }
 
   // Restore default behavior: exit the process
   // We need to exit explicitly because adding a listener prevents the default exit
-  process.exit(128 + 1);
+  process?.exit?.(128 + 1);
 };
 
 /**
@@ -42,12 +42,12 @@ const attach = () => {
 
   isAttached = true;
 
-  process.on("exit", handleExit);
-  process.on("SIGINT", handleSignal);
-  process.on("SIGTERM", handleSignal);
+  process?.on?.("exit", handleExit as (...args: unknown[]) => void);
+  process?.on?.("SIGINT", handleSignal);
+  process?.on?.("SIGTERM", handleSignal);
   // SIGHUP is not supported on Windows, but safe to listen to on other platforms
-  if (process.platform !== "win32") {
-    process.on("SIGHUP", handleSignal);
+  if (process?.platform !== "win32") {
+    process?.on?.("SIGHUP", handleSignal);
   }
 };
 

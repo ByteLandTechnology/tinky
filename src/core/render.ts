@@ -1,12 +1,13 @@
-import { Stream } from "node:stream";
-import process from "node:process";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
+import { type ReadStream, type WriteStream } from "../types/io.js";
 import {
   Tinky,
   type Options as TinkyOptions,
   type RenderMetrics,
 } from "./tinky.js";
 import { instances } from "./instances.js";
+import { process } from "../utils/node-adapater.js";
+import { emptyStream } from "../utils/empty-stream.js";
 
 /**
  * Options for the render function.
@@ -17,21 +18,21 @@ export interface RenderOptions {
    *
    * @defaultValue process.stdout
    */
-  stdout?: NodeJS.WriteStream;
+  stdout?: WriteStream;
 
   /**
    * Input stream where the app will listen for input.
    *
    * @defaultValue process.stdin
    */
-  stdin?: NodeJS.ReadStream;
+  stdin?: ReadStream;
 
   /**
    * Error stream.
    *
    * @defaultValue process.stderr
    */
-  stderr?: NodeJS.WriteStream;
+  stderr?: WriteStream;
 
   /**
    * If true, each update will be rendered as separate output, without
@@ -87,6 +88,13 @@ export interface RenderOptions {
    * @defaultValue false
    */
   incrementalRendering?: boolean;
+
+  /**
+   * Environment variables.
+   *
+   * @defaultValue process.env
+   */
+  env?: Record<string, string | undefined>;
 }
 
 /**
@@ -151,20 +159,18 @@ export interface Instance {
  * }, 1000);
  * ```
  */
-export const render = (
-  node: ReactNode,
-  options?: NodeJS.WriteStream | RenderOptions,
-): Instance => {
+export const render = (node: ReactNode, options?: RenderOptions): Instance => {
   const tinkyOptions: TinkyOptions = {
-    stdout: process.stdout,
-    stdin: process.stdin,
-    stderr: process.stderr,
+    stdout: process?.stdout || emptyStream,
+    stdin: process?.stdin || emptyStream,
+    stderr: process?.stderr || emptyStream,
     debug: false,
     exitOnCtrlC: true,
     patchConsole: true,
     maxFps: 30,
     incrementalRendering: false,
-    ...getOptions(options),
+    env: process?.env,
+    ...options,
   };
 
   const instance: Tinky = getInstance(
@@ -186,25 +192,6 @@ export const render = (
 };
 
 /**
- * Standardizes the options passed to render.
- *
- * @param stdout - The stdout stream or render options.
- * @returns The standardized render options.
- */
-const getOptions = (
-  stdout: NodeJS.WriteStream | RenderOptions | undefined = {},
-): RenderOptions => {
-  if (stdout instanceof Stream) {
-    return {
-      stdout,
-      stdin: process.stdin,
-    };
-  }
-
-  return stdout;
-};
-
-/**
  * Gets or creates a Tinky instance for the given stdout stream.
  *
  * @param stdout - The stdout stream.
@@ -213,7 +200,7 @@ const getOptions = (
  * @returns The Tinky instance.
  */
 const getInstance = (
-  stdout: NodeJS.WriteStream,
+  stdout: WriteStream,
   createInstance: () => Tinky,
 ): Tinky => {
   let instance = instances.get(stdout);

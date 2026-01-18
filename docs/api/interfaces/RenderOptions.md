@@ -25,6 +25,20 @@ false;
 
 ---
 
+### env?
+
+> `optional` **env**: `Record`\<`string`, `string` \| `undefined`\>
+
+Environment variables.
+
+#### Default Value
+
+```ts
+process.env;
+```
+
+---
+
 ### exitOnCtrlC?
 
 > `optional` **exitOnCtrlC**: `boolean`
@@ -122,7 +136,7 @@ true;
 
 ### stderr?
 
-> `optional` **stderr**: `WriteStream`
+> `optional` **stderr**: [`WriteStream`](WriteStream.md)
 
 Error stream.
 
@@ -136,7 +150,7 @@ process.stderr;
 
 ### stdin?
 
-> `optional` **stdin**: `ReadStream`
+> `optional` **stdin**: [`ReadStream`](ReadStream.md)
 
 Input stream where the app will listen for input.
 
@@ -150,7 +164,7 @@ process.stdin;
 
 ### stdout?
 
-> `optional` **stdout**: `WriteStream`
+> `optional` **stdout**: [`WriteStream`](WriteStream.md)
 
 Output stream where the app will be rendered.
 

@@ -1,5 +1,3 @@
-import { EventEmitter } from "node:events";
-import process from "node:process";
 import { PureComponent, type ReactNode } from "react";
 import * as cliCursor from "../utils/cli-cursor.js";
 import { AppContext } from "../contexts/AppContext.js";
@@ -8,6 +6,8 @@ import { StdoutContext } from "../contexts/StdoutContext.js";
 import { StderrContext } from "../contexts/StderrContext.js";
 import { FocusContext } from "../contexts/FocusContext.js";
 import { ErrorOverview } from "./ErrorOverview.js";
+import { type ReadStream, type WriteStream } from "../types/io.js";
+import { EventEmitter } from "../utils/event-emitter.js";
 
 const tab = "\t";
 const shiftTab = "\u001B[Z";
@@ -25,17 +25,17 @@ interface AppProps {
   /**
    * input stream.
    */
-  readonly stdin: NodeJS.ReadStream;
+  readonly stdin: ReadStream;
 
   /**
    * output stream.
    */
-  readonly stdout: NodeJS.WriteStream;
+  readonly stdout: WriteStream;
 
   /**
    * error stream.
    */
-  readonly stderr: NodeJS.WriteStream;
+  readonly stderr: WriteStream;
 
   /**
    * Function to write data to stdout.
@@ -126,7 +126,7 @@ export class App extends PureComponent<AppProps, State> {
 
   // Determines if TTY is supported on the provided stdin
   isRawModeSupported(): boolean {
-    return this.props.stdin.isTTY;
+    return !!this.props.stdin.isTTY;
   }
 
   override render() {
@@ -210,26 +210,20 @@ export class App extends PureComponent<AppProps, State> {
     const { stdin } = this.props;
 
     if (!this.isRawModeSupported()) {
-      if (stdin === process.stdin) {
-        throw new Error(
-          "Raw mode is not supported on the current process.stdin, " +
-            "which Tinky uses as input stream by default.",
-        );
-      } else {
-        throw new Error(
-          "Raw mode is not supported on the stdin provided to Tinky.",
-        );
-      }
+      throw new Error(
+        "Raw mode is not supported on the stdin provided to Tinky.",
+      );
     }
 
-    stdin.setEncoding("utf8");
+    stdin.setEncoding?.("utf8");
 
     if (isEnabled) {
       // Ensure raw mode is enabled only once
       if (this.rawModeEnabledCount === 0) {
-        stdin.ref();
+        stdin.ref?.();
+
         stdin.setRawMode(true);
-        stdin.addListener("readable", this.handleReadable);
+        stdin.on("data", this.handleReadable);
       }
 
       this.rawModeEnabledCount++;
@@ -239,8 +233,8 @@ export class App extends PureComponent<AppProps, State> {
     // Disable raw mode only when no components left that are using it
     if (--this.rawModeEnabledCount === 0) {
       stdin.setRawMode(false);
-      stdin.removeListener("readable", this.handleReadable);
-      stdin.unref();
+      stdin.off("data", this.handleReadable);
+      stdin.unref?.();
     }
   };
 
@@ -248,12 +242,10 @@ export class App extends PureComponent<AppProps, State> {
    * Reader function for handling standard input.
    * Reads data from stdin and emits it to the internal event emitter.
    */
-  handleReadable = (): void => {
-    let chunk;
-    while ((chunk = this.props.stdin.read() as string | null) !== null) {
-      this.handleInput(chunk);
-      this.internal_eventEmitter.emit("input", chunk);
-    }
+  handleReadable = (chunk: unknown): void => {
+    const input = String(chunk);
+    this.handleInput(input);
+    this.internal_eventEmitter.emit("input", input);
   };
 
   /**

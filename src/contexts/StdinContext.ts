@@ -1,6 +1,8 @@
-import { EventEmitter } from "node:events";
-import process from "node:process";
 import { createContext } from "react";
+import { type ReadStream } from "../types/io.js";
+import { EventEmitter } from "../utils/event-emitter.js";
+import { emptyStream } from "../utils/empty-stream.js";
+import { process } from "../utils/node-adapater.js";
 
 /**
  * Props for the StdinContext.
@@ -10,7 +12,7 @@ export interface StdinProps {
    * The stdin stream passed to `render()` in `options.stdin`, or
    * `process.stdin` by default. Useful if your app needs to handle user input.
    */
-  readonly stdin: NodeJS.ReadStream;
+  readonly stdin: ReadStream;
 
   /**
    * Tinky exposes this function via own `<StdinContext>` to handle Ctrl+C,
@@ -42,7 +44,7 @@ export interface StdinProps {
  * `StdinContext` is a React context that exposes the input stream.
  */
 export const StdinContext = createContext<StdinProps>({
-  stdin: process.stdin,
+  stdin: process?.stdin || emptyStream,
   internal_eventEmitter: new EventEmitter(),
   setRawMode() {
     // no-op

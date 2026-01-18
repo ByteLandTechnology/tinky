@@ -12,7 +12,7 @@ Props for StderrContext.
 
 ### stderr
 
-> `readonly` **stderr**: `WriteStream`
+> `readonly` **stderr**: [`WriteStream`](WriteStream.md)
 
 Stderr stream passed to `render()` in `options.stderr` or `process.stderr`
 by default.

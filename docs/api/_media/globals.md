@@ -8,6 +8,7 @@
 
 - [AppProps](interfaces/AppProps.md)
 - [Dimension](interfaces/Dimension.md)
+- [EventEmitter](interfaces/EventEmitter.md)
 - [FocusManager](interfaces/FocusManager.md)
 - [FocusOptions](interfaces/FocusOptions.md)
 - [FocusState](interfaces/FocusState.md)
@@ -15,6 +16,7 @@
 - [Instance](interfaces/Instance.md)
 - [Key](interfaces/Key.md)
 - [NewlineProps](interfaces/NewlineProps.md)
+- [ReadStream](interfaces/ReadStream.md)
 - [RenderMetrics](interfaces/RenderMetrics.md)
 - [RenderOptions](interfaces/RenderOptions.md)
 - [StaticProps](interfaces/StaticProps.md)
@@ -26,6 +28,7 @@
 - [TextProps](interfaces/TextProps.md)
 - [TinkyNode](interfaces/TinkyNode.md)
 - [TransformProps](interfaces/TransformProps.md)
+- [WriteStream](interfaces/WriteStream.md)
 
 ## Type Aliases
 
@@ -34,6 +37,7 @@
 - [DOMNode](type-aliases/DOMNode.md)
 - [DOMNodeAttribute](type-aliases/DOMNodeAttribute.md)
 - [ElementNames](type-aliases/ElementNames.md)
+- [Events](type-aliases/Events.md)
 - [InputHandler](type-aliases/InputHandler.md)
 - [NodeNames](type-aliases/NodeNames.md)
 - [OutputTransformer](type-aliases/OutputTransformer.md)

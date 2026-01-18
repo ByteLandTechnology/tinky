@@ -1,4 +1,3 @@
-import process from "node:process";
 import { type ReactNode } from "react";
 import { throttle } from "es-toolkit/compat";
 import ansiEscapes from "ansi-escapes";
@@ -10,6 +9,7 @@ import { LegacyRoot } from "react-reconciler/constants.js";
 import { type FiberRoot } from "react-reconciler";
 import { type AvailableSpace, type Size } from "taffy-layout";
 import wrapAnsi from "wrap-ansi";
+import { type ReadStream, type WriteStream } from "../types/io.js";
 import { reconciler } from "./reconciler.js";
 import { renderer } from "./renderer.js";
 import * as dom from "./dom.js";
@@ -40,17 +40,17 @@ export interface Options {
   /**
    * Output stream where the app will be rendered.
    */
-  stdout: NodeJS.WriteStream;
+  stdout: WriteStream;
 
   /**
    * Input stream where the app will listen for input.
    */
-  stdin: NodeJS.ReadStream;
+  stdin: ReadStream;
 
   /**
    * Error stream.
    */
-  stderr: NodeJS.WriteStream;
+  stderr: WriteStream;
 
   /**
    * If true, each update will be rendered as separate output, without
@@ -97,6 +97,11 @@ export interface Options {
    * of redrawing the entire output.
    */
   incrementalRendering?: boolean;
+
+  /**
+   * Environment variables.
+   */
+  env?: Record<string, string | undefined>;
 }
 
 /**
@@ -132,6 +137,8 @@ export class Tinky {
   private restoreConsole?: () => void;
   /** Function to unsubscribe from resize events. */
   private readonly unsubscribeResize?: () => void;
+  /** Whether we are running in a CI environment. */
+  private readonly isCI: boolean;
 
   /**
    * Creates an instance of Tinky.
@@ -147,7 +154,7 @@ export class Tinky {
 
     this.isScreenReaderEnabled =
       options.isScreenReaderEnabled ??
-      process.env["TINKY_SCREEN_READER"] === "true";
+      options.env?.["TINKY_SCREEN_READER"] === "true";
 
     const unthrottled = options.debug || this.isScreenReaderEnabled;
     const maxFps = options.maxFps ?? 30;
@@ -205,7 +212,7 @@ export class Tinky {
       this.unmount();
     });
 
-    if (process.env["DEV"] === "true") {
+    if (options.env?.["DEV"] === "true") {
       reconciler.injectIntoDevTools({
         bundleType: 0,
         // Reporting React DOM's version, not Tinky's
@@ -214,11 +221,13 @@ export class Tinky {
       });
     }
 
-    if (options.patchConsole) {
+    this.isCI = isCI(options.env);
+
+    if (this.options.patchConsole) {
       this.patchConsole();
     }
 
-    if (!isCI) {
+    if (!this.isCI) {
       options.stdout.on("resize", this.resized);
 
       this.unsubscribeResize = () => {
@@ -336,7 +345,7 @@ export class Tinky {
       return;
     }
 
-    if (isCI) {
+    if (this.isCI) {
       if (hasStaticOutput) {
         this.options.stdout.write(staticOutput);
       }
@@ -390,7 +399,10 @@ export class Tinky {
       this.fullStaticOutput += staticOutput;
     }
 
-    if (this.lastOutputHeight >= this.options.stdout.rows) {
+    if (
+      this.options.stdout.rows &&
+      this.lastOutputHeight >= this.options.stdout.rows
+    ) {
       this.options.stdout.write(
         ansiEscapes.clearTerminal + this.fullStaticOutput + output,
       );
@@ -459,7 +471,7 @@ export class Tinky {
       return;
     }
 
-    if (isCI) {
+    if (this.isCI) {
       this.options.stdout.write(data);
       return;
     }
@@ -485,7 +497,7 @@ export class Tinky {
       return;
     }
 
-    if (isCI) {
+    if (this.isCI) {
       this.options.stderr.write(data);
       return;
     }
@@ -524,7 +536,7 @@ export class Tinky {
 
     // CIs don't handle erasing ansi escapes well, so it's better to
     // only render last frame of non-static output
-    if (isCI) {
+    if (this.isCI) {
       this.options.stdout.write(this.lastOutput + "\n");
     } else if (!this.options.debug) {
       this.log.done();
@@ -575,7 +587,9 @@ export class Tinky {
    * Clears the output.
    */
   clear(): void {
-    if (!isCI && !this.options.debug) {
+    const isCiEnv = isCI(this.options.env);
+
+    if (!isCiEnv) {
       this.log.clear();
     }
   }

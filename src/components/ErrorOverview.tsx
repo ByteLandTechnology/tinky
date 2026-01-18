@@ -1,18 +1,17 @@
-import * as fs from "node:fs";
-import { cwd } from "node:process";
 import StackUtils from "stack-utils";
 import codeExcerpt, { type CodeExcerpt } from "code-excerpt";
 import { Box } from "./Box.js";
 import { Text } from "./Text.js";
+import { fs, process } from "../utils/node-adapater.js";
 
 // Error's source file is reported as file:///home/user/file.js
 // This function removes the file://[cwd] part
 const cleanupPath = (path: string | undefined): string | undefined => {
-  return path?.replace(`file://${cwd()}/`, "");
+  return path?.replace(`file://${process?.cwd?.()}/`, "");
 };
 
 const stackUtils = new StackUtils({
-  cwd: cwd(),
+  cwd: process?.cwd?.(),
   internals: StackUtils.nodeInternals(),
 });
 
@@ -31,7 +30,7 @@ export function ErrorOverview({ error }: ErrorProps) {
   let excerpt: CodeExcerpt[] | undefined;
   let lineWidth = 0;
 
-  if (filePath && origin?.line && fs.existsSync(filePath)) {
+  if (filePath && origin?.line && fs?.existsSync(filePath)) {
     const sourceCode = fs.readFileSync(filePath, "utf8");
     excerpt = codeExcerpt(sourceCode, origin.line);
 

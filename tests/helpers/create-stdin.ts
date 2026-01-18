@@ -1,4 +1,5 @@
-import { EventEmitter } from "node:events";
+import { ReadStream, WriteStream } from "../../src/types/io";
+import { EventEmitter } from "../../src/utils/event-emitter";
 import { spy, stub } from "sinon";
 
 /**
@@ -35,8 +36,8 @@ type FakeStdin = {
    * Returns the number of times unref was called.
    */
   unrefCallCount: () => number;
-} & NodeJS.ReadStream &
-  NodeJS.WriteStream;
+} & ReadStream &
+  WriteStream;
 
 /**
  * Creates a mocked stdin stream for testing input handling.
@@ -45,7 +46,7 @@ type FakeStdin = {
  * @returns A fake stdin object with methods to simulate input.
  */
 export function createStdin(isTTY?: boolean) {
-  const stdin = new EventEmitter() as unknown as FakeStdin;
+  const stdin = new EventEmitter() as unknown as EventEmitter & FakeStdin;
   const setRawMode = spy();
   const ref = spy();
   const unref = spy();
@@ -54,10 +55,9 @@ export function createStdin(isTTY?: boolean) {
   stdin.emitReadable = (chunk: string) => {
     read.onCall(0).returns(chunk);
     read.onCall(1).returns(null);
-    stdin.emit("readable");
+    stdin.emit("data", chunk);
     read.reset();
   };
-  stdin.read = read;
   stdin.setEncoding = () => stdin;
   stdin.setRawMode = setRawMode;
   stdin.isTTY = isTTY ?? true;

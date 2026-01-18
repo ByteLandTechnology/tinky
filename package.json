@@ -33,7 +33,7 @@
   "scripts": {
     "test": "bun test",
     "build": "tsc && npm run docs",
-    "lint": "tslint -c tslint.json src/**/*.ts",
+    "lint": "eslint src/**/*.ts",
     "prepublish": "npm run build",
     "prepare": "husky",
     "docs": "typedoc --plugin typedoc-plugin-markdown --disableSources --out docs/api && prettier --write docs/api"
@@ -49,6 +49,7 @@
     "code-excerpt": "^4.0.0",
     "es-toolkit": "^1.43.0",
     "indent-string": "^5.0.0",
+    "mitt": "^3.0.1",
     "react-reconciler": "^0.33.0",
     "stack-utils": "^2.0.6",
     "taffy-layout": "^0.1.0",

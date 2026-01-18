@@ -1,3 +1,4 @@
+export { type ReadStream, type WriteStream } from "./types/io.js";
 export { render, type RenderOptions, type Instance } from "./core/render.js";
 export { Box, type BoxProps } from "./components/Box.js";
 export { Text, type TextProps } from "./components/Text.js";
@@ -45,3 +46,4 @@ export { type Styles } from "./core/styles.js";
 export { type OutputTransformer } from "./core/render-node-to-output.js";
 export { type RenderMetrics } from "./core/tinky.js";
 export { type TaffyNode } from "./core/taffy-node.js";
+export { type EventEmitter, type Events } from "./utils/event-emitter.js";

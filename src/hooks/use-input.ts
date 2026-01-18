@@ -161,8 +161,8 @@ export const useInput = (
       return;
     }
 
-    const handleData = (data: string) => {
-      const keypress = parseKeypress(data);
+    const handleData = (data: unknown) => {
+      const keypress = parseKeypress(String(data));
 
       const key = {
         upArrow: keypress.name === "up",
@@ -218,7 +218,7 @@ export const useInput = (
     internal_eventEmitter?.on("input", handleData);
 
     return () => {
-      internal_eventEmitter?.removeListener("input", handleData);
+      internal_eventEmitter?.off("input", handleData);
     };
   }, [options.isActive, stdin, internal_exitOnCtrlC, inputHandler]);
 };

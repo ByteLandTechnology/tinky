@@ -1,4 +1,4 @@
-import { type Writable } from "node:stream";
+import { type WriteStream } from "../types/io.js";
 import ansiEscapes from "ansi-escapes";
 import * as cliCursor from "../utils/cli-cursor.js";
 
@@ -41,7 +41,7 @@ export interface LogUpdate {
  * @returns A LogUpdate instance.
  */
 const createStandard = (
-  stream: Writable,
+  stream: WriteStream,
   { showCursor = false } = {},
 ): LogUpdate => {
   let previousLineCount = 0;
@@ -99,7 +99,7 @@ const createStandard = (
  * @returns A LogUpdate instance.
  */
 const createIncremental = (
-  stream: Writable,
+  stream: WriteStream,
   { showCursor = false } = {},
 ): LogUpdate => {
   let previousLines: string[] = [];
@@ -203,7 +203,7 @@ const createIncremental = (
  * @returns A LogUpdate instance.
  */
 const create = (
-  stream: Writable,
+  stream: WriteStream,
   { showCursor = false, incremental = false } = {},
 ): LogUpdate => {
   if (incremental) {

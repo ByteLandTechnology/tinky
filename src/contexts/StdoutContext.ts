@@ -1,5 +1,7 @@
-import process from "node:process";
 import { createContext } from "react";
+import { type WriteStream } from "../types/io.js";
+import { emptyStream } from "../utils/empty-stream.js";
+import { process } from "../utils/node-adapater.js";
 
 /**
  * Props for StdoutContext.
@@ -9,7 +11,7 @@ export interface StdoutProps {
    * Stdout stream passed to `render()` in `options.stdout` or
    * `process.stdout` by default.
    */
-  readonly stdout: NodeJS.WriteStream;
+  readonly stdout: WriteStream;
 
   /**
    * Write any string to stdout while preserving Tinky's output. It's useful
@@ -25,7 +27,7 @@ export interface StdoutProps {
  * Tinky renders your app.
  */
 export const StdoutContext = createContext<StdoutProps>({
-  stdout: process.stdout,
+  stdout: process?.stdout || emptyStream,
   write() {
     // no-op
   },

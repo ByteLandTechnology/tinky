@@ -12,7 +12,7 @@ Props for StdoutContext.
 
 ### stdout
 
-> `readonly` **stdout**: `WriteStream`
+> `readonly` **stdout**: [`WriteStream`](WriteStream.md)
 
 Stdout stream passed to `render()` in `options.stdout` or
 `process.stdout` by default.

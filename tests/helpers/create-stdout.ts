@@ -1,4 +1,5 @@
-import EventEmitter from "node:events";
+import { WriteStream } from "../../src/types/io.js";
+import { EventEmitter } from "../../src/utils/event-emitter.js";
 
 /**
  * Fake process.stdout for testing.
@@ -29,21 +30,21 @@ type FakeStdout = {
    * Contains all the output that was written to stdout as a single string.
    */
   output: string;
-} & NodeJS.WriteStream;
+  emit: (event: string, data?: unknown) => boolean;
+  listeners: (event: string) => unknown[];
+} & WriteStream;
 
 /**
  * Creates a mocked stdout stream for capturing output.
  *
  * @param columns - Number of columns in the fake terminal. Default is 100.
- * @param isTTY - Whether the stream should behave like a TTY. Default is true.
  * @returns A fake stdout object.
  */
-export const createStdout = (columns?: number, isTTY?: boolean): FakeStdout => {
-  const stdout = new EventEmitter() as unknown as FakeStdout;
+export const createStdout = (columns?: number): FakeStdout => {
+  const stdout = new EventEmitter() as unknown as EventEmitter & FakeStdout;
   stdout.columns = columns ?? 100;
   // Default to 24 rows, similar to a standard terminal
   stdout.rows = 24;
-  stdout.isTTY = isTTY ?? true;
 
   const frames: string[] = [];
   const calls: { args: [string] }[] = [];
@@ -52,6 +53,10 @@ export const createStdout = (columns?: number, isTTY?: boolean): FakeStdout => {
     frames.push(str);
     calls.push({ args: [str] });
     return true;
+  };
+
+  stdout.listeners = (event: string) => {
+    return stdout.emitter.all.get(event) || [];
   };
 
   stdout.write = (str: string) => {

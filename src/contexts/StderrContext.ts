@@ -1,5 +1,7 @@
-import process from "node:process";
 import { createContext } from "react";
+import { type WriteStream } from "../types/io.js";
+import { process } from "../utils/node-adapater.js";
+import { emptyStream } from "../utils/empty-stream.js";
 
 /**
  * Props for StderrContext.
@@ -9,7 +11,7 @@ export interface StderrProps {
    * Stderr stream passed to `render()` in `options.stderr` or `process.stderr`
    * by default.
    */
-  readonly stderr: NodeJS.WriteStream;
+  readonly stderr: WriteStream;
 
   /**
    * Write any string to stderr while preserving Tinky's output. It's useful
@@ -24,7 +26,7 @@ export interface StderrProps {
  * `StderrContext` is a React context that exposes the stderr stream.
  */
 export const StderrContext = createContext<StderrProps>({
-  stderr: process.stderr,
+  stderr: process?.stderr || emptyStream,
   write() {
     // no-op
   },

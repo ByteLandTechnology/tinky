@@ -20,9 +20,9 @@ The React component to render.
 
 ### options?
 
-Render options or the stdout stream.
+[`RenderOptions`](../interfaces/RenderOptions.md)
 
-`WriteStream` | [`RenderOptions`](../interfaces/RenderOptions.md)
+Render options or the stdout stream.
 
 ## Returns
 

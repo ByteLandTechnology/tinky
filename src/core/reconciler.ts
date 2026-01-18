@@ -1,4 +1,3 @@
-import process from "node:process";
 import createReconciler, {
   type OpaqueRoot,
   type ReactContext,
@@ -27,10 +26,11 @@ import {
 import { applyStyles, type Styles } from "./styles.js";
 import { type OutputTransformer } from "./render-node-to-output.js";
 import type { TaffyNode } from "./taffy-node.js";
+import { process } from "../utils/node-adapater.js";
 
 // We need to conditionally perform devtools connection to avoid
 // accidentally breaking other third-party code.
-if (process.env["DEV"] === "true") {
+if (process?.env?.["DEV"] === "true") {
   try {
     await import("./devtools.js");
   } catch (error: unknown) {
