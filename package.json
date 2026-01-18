@@ -1,6 +1,6 @@
 {
   "name": "tinky",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "React for CLIs, re-imagined with the Taffy engine",
   "keywords": [
     "react",

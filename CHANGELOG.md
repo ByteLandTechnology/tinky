@@ -1,3 +1,8 @@
+## <small>1.2.1 (2026-01-18)</small>
+
+- build: fix semantic-release config and reformat changelog ([10427ba](https://github.com/ByteLandTechnology/tinky/commit/10427ba))
+- refactor: replace chalk with ansis and update types ([e7415fc](https://github.com/ByteLandTechnology/tinky/commit/e7415fc))
+
 # [1.2.0](https://github.com/ByteLandTechnology/tinky/compare/v1.1.2...v1.2.0) (2026-01-18)
 
 ### ✨ Features
