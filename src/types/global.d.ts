@@ -8,6 +8,7 @@ declare module "react" {
     interface IntrinsicElements {
       "tinky-box": Tinky.Box;
       "tinky-text": Tinky.Text;
+      "tinky-separator": Tinky.Separator;
     }
   }
 }
@@ -38,5 +39,16 @@ declare namespace Tinky {
 
     internal_transform?: (children: string, index: number) => string;
     internal_accessibility?: DOMElement["internal_accessibility"];
+  }
+
+  /**
+   * Props for the internal tinky-separator element.
+   */
+  interface Separator {
+    key?: Key;
+    style?: Except<Styles, "textWrap">;
+    internal_separatorChar?: string;
+    internal_separatorDirection?: "horizontal" | "vertical";
+    internal_transform?: (text: string) => string;
   }
 }

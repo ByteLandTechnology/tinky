@@ -203,6 +203,29 @@ export const renderNodeToOutput = (
       return;
     }
 
+    if (node.nodeName === "tinky-separator") {
+      const separatorChar =
+        (node.attributes["internal_separatorChar"] as string) || "─";
+      const direction =
+        (node.attributes["internal_separatorDirection"] as string) ||
+        "horizontal";
+
+      let separatorText: string;
+
+      if (direction === "horizontal") {
+        // Fill width with the separator character
+        const width = Math.max(0, Math.floor(layout.width));
+        separatorText = separatorChar.repeat(width);
+      } else {
+        // Fill height with the separator character (one per line)
+        const height = Math.max(0, Math.floor(layout.height));
+        separatorText = (separatorChar + "\n").repeat(height).trimEnd();
+      }
+
+      output.write(x, y, separatorText, { transformers: newTransformers });
+      return;
+    }
+
     let clipped = false;
 
     if (node.nodeName === "tinky-box") {

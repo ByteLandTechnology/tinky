@@ -9,6 +9,7 @@ export { StderrContext, type StderrProps } from "./contexts/StderrContext.js";
 export { Static, type StaticProps } from "./components/Static.js";
 export { Transform, type TransformProps } from "./components/Transform.js";
 export { Newline, type NewlineProps } from "./components/Newline.js";
+export { Separator, type SeparatorProps } from "./components/Separator.js";
 export { Spacer } from "./components/Spacer.js";
 export {
   useInput,
@@ -32,6 +33,7 @@ export {
 export { useIsScreenReaderEnabled } from "./hooks/use-is-screen-reader-enabled.js";
 export { measureElement } from "./utils/measure-element.js";
 export { type Dimension } from "./utils/dimension.js";
+export { applyTextStyles, type TextStyles } from "./utils/apply-text-styles.js";
 export {
   type DOMElement,
   type DOMNode,

@@ -1,7 +1,8 @@
 import { useContext, type ReactNode } from "react";
-import chalk, { type ForegroundColorName } from "chalk";
-import { type LiteralUnion } from "type-fest";
-import { colorize } from "../utils/colorize.js";
+import {
+  applyTextStyles,
+  type TextStyles,
+} from "../utils/apply-text-styles.js";
 import { AccessibilityContext } from "../contexts/AccessibilityContext.js";
 import { backgroundContext } from "../contexts/BackgroundContext.js";
 import { type Styles } from "../core/styles.js";
@@ -9,7 +10,7 @@ import { type Styles } from "../core/styles.js";
 /**
  * Props for the Text component.
  */
-export interface TextProps {
+export interface TextProps extends TextStyles {
   /**
    * A label for the element for screen readers.
    */
@@ -19,47 +20,6 @@ export interface TextProps {
    * Hide the element from screen readers.
    */
   readonly "aria-hidden"?: boolean;
-
-  /**
-   * Change text color. Tinky uses Chalk under the hood, so all its functionality
-   * is supported.
-   */
-  readonly color?: LiteralUnion<ForegroundColorName, string>;
-
-  /**
-   * Same as `color`, but for the background.
-   */
-  readonly backgroundColor?: LiteralUnion<ForegroundColorName, string>;
-
-  /**
-   * Dim the color (make it less bright).
-   */
-  readonly dimColor?: boolean;
-
-  /**
-   * Make the text bold.
-   */
-  readonly bold?: boolean;
-
-  /**
-   * Make the text italic.
-   */
-  readonly italic?: boolean;
-
-  /**
-   * Make the text underlined.
-   */
-  readonly underline?: boolean;
-
-  /**
-   * Make the text crossed out with a line.
-   */
-  readonly strikethrough?: boolean;
-
-  /**
-   * Inverse background and foreground colors.
-   */
-  readonly inverse?: boolean;
 
   /**
    * This property tells Tinky to wrap or truncate text if its width is larger
@@ -121,42 +81,20 @@ export function Text({
   }
 
   const transform = (children: string): string => {
-    if (dimColor) {
-      children = chalk.dim(children);
-    }
-
-    if (color) {
-      children = colorize(children, color, "foreground");
-    }
-
     // Use explicit backgroundColor if provided, otherwise use inherited from parent Box
     const effectiveBackgroundColor =
       backgroundColor ?? inheritedBackgroundColor;
-    if (effectiveBackgroundColor) {
-      children = colorize(children, effectiveBackgroundColor, "background");
-    }
 
-    if (bold) {
-      children = chalk.bold(children);
-    }
-
-    if (italic) {
-      children = chalk.italic(children);
-    }
-
-    if (underline) {
-      children = chalk.underline(children);
-    }
-
-    if (strikethrough) {
-      children = chalk.strikethrough(children);
-    }
-
-    if (inverse) {
-      children = chalk.inverse(children);
-    }
-
-    return children;
+    return applyTextStyles(children, {
+      color,
+      backgroundColor: effectiveBackgroundColor,
+      dimColor,
+      bold,
+      italic,
+      underline,
+      strikethrough,
+      inverse,
+    });
   };
 
   if (isScreenReaderEnabled && ariaHidden) {

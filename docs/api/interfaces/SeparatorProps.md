@@ -2,33 +2,17 @@
 
 ---
 
-[tinky](../globals.md) / TextProps
+[tinky](../globals.md) / SeparatorProps
 
-# Interface: TextProps
+# Interface: SeparatorProps
 
-Props for the Text component.
+Props for the Separator component.
 
 ## Extends
 
 - [`TextStyles`](TextStyles.md)
 
 ## Properties
-
-### aria-hidden?
-
-> `readonly` `optional` **aria-hidden**: `boolean`
-
-Hide the element from screen readers.
-
----
-
-### aria-label?
-
-> `readonly` `optional` **aria-label**: `string`
-
-A label for the element for screen readers.
-
----
 
 ### backgroundColor?
 
@@ -54,11 +38,23 @@ Make the text bold.
 
 ---
 
-### children?
+### char?
 
-> `readonly` `optional` **children**: `ReactNode`
+> `readonly` `optional` **char**: `string`
 
-Children of the component.
+The character to repeat for the separator line.
+
+#### Default Value
+
+```ts
+"─";
+```
+
+#### Example
+
+```tsx
+<Separator char="=" />
+```
 
 ---
 
@@ -84,6 +80,23 @@ Dim the color (make it less bright).
 #### Inherited from
 
 [`TextStyles`](TextStyles.md).[`dimColor`](TextStyles.md#dimcolor)
+
+---
+
+### direction?
+
+> `readonly` `optional` **direction**: `"horizontal"` \| `"vertical"`
+
+The direction of the separator.
+
+- `"horizontal"`: The separator will expand horizontally to fill the container's width. Height will be 1 row.
+- `"vertical"`: The separator will expand vertically to fill the container's height. Width will be 1 column.
+
+#### Default Value
+
+```ts
+"horizontal";
+```
 
 ---
 
@@ -132,14 +145,3 @@ Make the text underlined.
 #### Inherited from
 
 [`TextStyles`](TextStyles.md).[`underline`](TextStyles.md#underline)
-
----
-
-### wrap?
-
-> `readonly` `optional` **wrap**: `"end"` \| `"truncate"` \| `"middle"` \| `"wrap"` \| `"truncate-end"` \| `"truncate-middle"` \| `"truncate-start"`
-
-This property tells Tinky to wrap or truncate text if its width is larger
-than the container. If `wrap` is passed (the default), Tinky will wrap text
-and split it into multiple lines. If `truncate-*` is passed, Tinky will
-truncate text instead, resulting in one line with the rest cut off.

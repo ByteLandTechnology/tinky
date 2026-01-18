@@ -19,6 +19,7 @@
 - [ReadStream](interfaces/ReadStream.md)
 - [RenderMetrics](interfaces/RenderMetrics.md)
 - [RenderOptions](interfaces/RenderOptions.md)
+- [SeparatorProps](interfaces/SeparatorProps.md)
 - [StaticProps](interfaces/StaticProps.md)
 - [StderrProps](interfaces/StderrProps.md)
 - [StdinProps](interfaces/StdinProps.md)
@@ -26,6 +27,7 @@
 - [Styles](interfaces/Styles.md)
 - [TaffyNode](interfaces/TaffyNode.md)
 - [TextProps](interfaces/TextProps.md)
+- [TextStyles](interfaces/TextStyles.md)
 - [TinkyNode](interfaces/TinkyNode.md)
 - [TransformProps](interfaces/TransformProps.md)
 - [WriteStream](interfaces/WriteStream.md)
@@ -54,9 +56,11 @@
 
 ## Functions
 
+- [applyTextStyles](functions/applyTextStyles.md)
 - [measureElement](functions/measureElement.md)
 - [Newline](functions/Newline.md)
 - [render](functions/render.md)
+- [Separator](functions/Separator.md)
 - [Spacer](functions/Spacer.md)
 - [Static](functions/Static.md)
 - [Text](functions/Text.md)

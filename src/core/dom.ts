@@ -33,7 +33,8 @@ export type ElementNames =
   | "tinky-root"
   | "tinky-box"
   | "tinky-text"
-  | "tinky-virtual-text";
+  | "tinky-virtual-text"
+  | "tinky-separator";
 
 /**
  * Union type of all possible node names.
