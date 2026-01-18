@@ -25,15 +25,6 @@ const myStream: WriteStream = {
   },
   columns: 80,
   rows: 24,
-  on: (event, listener) => {
-    return myStream;
-  },
-  off: (event, listener) => {
-    return myStream;
-  },
-  once: (event, listener) => {
-    return myStream;
-  },
 };
 ```
 
@@ -64,9 +55,9 @@ This property is used by Tinky to handle clearing the screen or scrolling.
 
 ## Methods
 
-### off()
+### off()?
 
-> **off**(`event`, `listener`): `this`
+> `optional` **off**(`event`, `listener`): `this`
 
 Remove an event listener.
 
@@ -92,9 +83,9 @@ The stream instance for chaining.
 
 ---
 
-### on()
+### on()?
 
-> **on**(`event`, `listener`): `this`
+> `optional` **on**(`event`, `listener`): `this`
 
 Register an event listener.
 
@@ -120,89 +111,33 @@ The stream instance for chaining.
 
 ---
 
-### once()
-
-> **once**(`event`, `listener`): `this`
-
-Register a one-time event listener.
-
-#### Parameters
-
-##### event
-
-`string`
-
-The event name.
-
-##### listener
-
-(...`args`) => `void`
-
-The callback function.
-
-#### Returns
-
-`this`
-
-The stream instance for chaining.
-
----
-
 ### write()
-
-#### Call Signature
-
-> **write**(`buffer`, `cb?`): `boolean`
-
-Writes data to the stream.
-
-##### Parameters
-
-###### buffer
-
-The data to write as a Uint8Array.
-
-`string` | `Uint8Array`\<`ArrayBufferLike`\>
-
-###### cb?
-
-(`err?`) => `void`
-
-Optional callback to be invoked when the write is complete.
-
-##### Returns
-
-`boolean`
-
-`true` if the string has been flushed to the kernel buffer.
-
-#### Call Signature
 
 > **write**(`str`, `encoding?`, `cb?`): `boolean`
 
 Writes a string to the stream.
 
-##### Parameters
+#### Parameters
 
-###### str
+##### str
 
 `string`
 
 The string to write.
 
-###### encoding?
+##### encoding?
 
 `string`
 
 The encoding to use (e.g., 'utf8').
 
-###### cb?
+##### cb?
 
 (`err?`) => `void`
 
 Optional callback to be invoked when the write is complete.
 
-##### Returns
+#### Returns
 
 `boolean`
 

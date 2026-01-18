@@ -12,26 +12,11 @@
  * const myStream: WriteStream = {
  *   write: (str) => { console.log(str); return true; },
  *   columns: 80,
- *   rows: 24,
- *   on: (event, listener) => { return myStream; },
- *   off: (event, listener) => { return myStream; },
- *   once: (event, listener) => { return myStream; }
+ *   rows: 24
  * };
  * ```
  */
 export interface WriteStream {
-  /**
-   * Writes data to the stream.
-   *
-   * @param buffer - The data to write as a Uint8Array.
-   * @param cb - Optional callback to be invoked when the write is complete.
-   * @returns `true` if the string has been flushed to the kernel buffer.
-   */
-  write(
-    buffer: Uint8Array | string,
-    cb?: (err?: Error | null) => void,
-  ): boolean;
-
   /**
    * Writes a string to the stream.
    *
@@ -70,7 +55,7 @@ export interface WriteStream {
    * @param listener - The callback function.
    * @returns The stream instance for chaining.
    */
-  on(event: string, listener: (...args: unknown[]) => void): this;
+  on?(event: string, listener: (...args: unknown[]) => void): this;
 
   /**
    * Remove an event listener.
@@ -79,16 +64,7 @@ export interface WriteStream {
    * @param listener - The callback function to remove.
    * @returns The stream instance for chaining.
    */
-  off(event: string, listener: (...args: unknown[]) => void): this;
-
-  /**
-   * Register a one-time event listener.
-   *
-   * @param event - The event name.
-   * @param listener - The callback function.
-   * @returns The stream instance for chaining.
-   */
-  once(event: string, listener: (...args: unknown[]) => void): this;
+  off?(event: string, listener: (...args: unknown[]) => void): this;
 }
 
 /**
@@ -101,18 +77,6 @@ export interface WriteStream {
  * @example
  * ```typescript
  * const myStdin: ReadStream = {
- *   setRawMode: (mode) => myStdin,
- *   on: (event, listener) => {
- *     if (event === 'data') {
- *       // simulate input
- *       listener('input string');
- *     }
- *     return myStdin;
- *   },
- *   off: () => myStdin,
- *   once: () => myStdin,
- *   pause: () => myStdin,
- *   resume: () => myStdin,
  *   isTTY: true
  * };
  * ```
@@ -128,7 +92,7 @@ export interface ReadStream {
    * @param mode - `true` to enable raw mode, `false` to disable.
    * @returns The stream instance.
    */
-  setRawMode(mode: boolean): this;
+  setRawMode?(mode: boolean): this;
 
   /**
    * Register an event listener.
@@ -137,7 +101,7 @@ export interface ReadStream {
    * @param listener - The callback function.
    * @returns The stream instance.
    */
-  on(event: string, listener: (...args: unknown[]) => void): this;
+  on?(event: string, listener: (...args: unknown[]) => void): this;
 
   /**
    * Remove an event listener.
@@ -146,30 +110,7 @@ export interface ReadStream {
    * @param listener - The callback function.
    * @returns The stream instance.
    */
-  off(event: string, listener: (...args: unknown[]) => void): this;
-
-  /**
-   * Register a one-time event listener.
-   *
-   * @param event - The event name.
-   * @param listener - The callback function.
-   * @returns The stream instance.
-   */
-  once(event: string, listener: (...args: unknown[]) => void): this;
-
-  /**
-   * Pauses the stream.
-   *
-   * @returns The stream instance.
-   */
-  pause(): this;
-
-  /**
-   * Resumes the stream.
-   *
-   * @returns The stream instance.
-   */
-  resume(): this;
+  off?(event: string, listener: (...args: unknown[]) => void): this;
 
   /**
    * Indicates whether the stream is a TTY (Terminal).

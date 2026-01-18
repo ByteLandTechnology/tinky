@@ -17,18 +17,6 @@ This interface handles input events, primarily for keyboard interaction.
 
 ```typescript
 const myStdin: ReadStream = {
-  setRawMode: (mode) => myStdin,
-  on: (event, listener) => {
-    if (event === "data") {
-      // simulate input
-      listener("input string");
-    }
-    return myStdin;
-  },
-  off: () => myStdin,
-  once: () => myStdin,
-  pause: () => myStdin,
-  resume: () => myStdin,
   isTTY: true,
 };
 ```
@@ -43,9 +31,9 @@ Indicates whether the stream is a TTY (Terminal).
 
 ## Methods
 
-### off()
+### off()?
 
-> **off**(`event`, `listener`): `this`
+> `optional` **off**(`event`, `listener`): `this`
 
 Remove an event listener.
 
@@ -71,9 +59,9 @@ The stream instance.
 
 ---
 
-### on()
+### on()?
 
-> **on**(`event`, `listener`): `this`
+> `optional` **on**(`event`, `listener`): `this`
 
 Register an event listener.
 
@@ -99,48 +87,6 @@ The stream instance.
 
 ---
 
-### once()
-
-> **once**(`event`, `listener`): `this`
-
-Register a one-time event listener.
-
-#### Parameters
-
-##### event
-
-`string`
-
-The event name.
-
-##### listener
-
-(...`args`) => `void`
-
-The callback function.
-
-#### Returns
-
-`this`
-
-The stream instance.
-
----
-
-### pause()
-
-> **pause**(): `this`
-
-Pauses the stream.
-
-#### Returns
-
-`this`
-
-The stream instance.
-
----
-
 ### ref()?
 
 > `optional` **ref**(): `void`
@@ -150,20 +96,6 @@ Keeps the process alive as long as the stream is active.
 #### Returns
 
 `void`
-
----
-
-### resume()
-
-> **resume**(): `this`
-
-Resumes the stream.
-
-#### Returns
-
-`this`
-
-The stream instance.
 
 ---
 
@@ -187,9 +119,9 @@ The encoding to use (e.g., 'utf8').
 
 ---
 
-### setRawMode()
+### setRawMode()?
 
-> **setRawMode**(`mode`): `this`
+> `optional` **setRawMode**(`mode`): `this`
 
 Sets the stream to raw mode.
 

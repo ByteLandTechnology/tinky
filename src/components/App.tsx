@@ -222,8 +222,8 @@ export class App extends PureComponent<AppProps, State> {
       if (this.rawModeEnabledCount === 0) {
         stdin.ref?.();
 
-        stdin.setRawMode(true);
-        stdin.on("data", this.handleReadable);
+        stdin.setRawMode?.(true);
+        stdin.on?.("data", this.handleReadable);
       }
 
       this.rawModeEnabledCount++;
@@ -232,8 +232,8 @@ export class App extends PureComponent<AppProps, State> {
 
     // Disable raw mode only when no components left that are using it
     if (--this.rawModeEnabledCount === 0) {
-      stdin.setRawMode(false);
-      stdin.off("data", this.handleReadable);
+      stdin.setRawMode?.(false);
+      stdin.off?.("data", this.handleReadable);
       stdin.unref?.();
     }
   };

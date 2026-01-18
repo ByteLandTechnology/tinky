@@ -6,9 +6,6 @@ export const emptyStream: WriteStream & ReadStream = {
   rows: 24,
   on: () => emptyStream,
   off: () => emptyStream,
-  once: () => emptyStream,
   setRawMode: () => emptyStream,
-  pause: () => emptyStream,
-  resume: () => emptyStream,
   isTTY: false,
 };

@@ -228,10 +228,10 @@ export class Tinky {
     }
 
     if (!this.isCI) {
-      options.stdout.on("resize", this.resized);
+      options.stdout.on?.("resize", this.resized);
 
       this.unsubscribeResize = () => {
-        options.stdout.off("resize", this.resized);
+        options.stdout.off?.("resize", this.resized);
       };
     }
   }
