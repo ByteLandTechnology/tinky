@@ -1,3 +1,8 @@
+## <small>1.1.1 (2026-01-18)</small>
+
+- build: enhance semantic-release configuration ([7b46092](https://github.com/ByteLandTechnology/tinky/commit/7b46092))
+- refactor: remove Node.js dependencies for better portability ([7fcda48](https://github.com/ByteLandTechnology/tinky/commit/7fcda48))
+
 # [1.1.0](https://github.com/ByteLandTechnology/tinky/compare/v1.0.0...v1.1.0) (2026-01-17)
 
 ### Features
