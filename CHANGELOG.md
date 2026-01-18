@@ -1,3 +1,7 @@
+## 1.2.0 (2026-01-18)
+
+- feat: add Separator and refactor Text styling ([7ea3d03](https://github.com/ByteLandTechnology/tinky/commit/7ea3d03))
+
 ## <small>1.1.2 (2026-01-18)</small>
 
 - refactor(types): simplify IO stream interfaces ([477a6ce](https://github.com/ByteLandTechnology/tinky/commit/477a6ce))
