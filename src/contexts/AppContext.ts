@@ -8,6 +8,11 @@ export interface AppProps {
    * Exit (unmount) the whole Tinky app.
    */
   readonly exit: (error?: Error) => void;
+
+  /**
+   * The platform the app is running on.
+   */
+  readonly platform?: string;
 }
 
 /**

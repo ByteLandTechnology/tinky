@@ -8,6 +8,7 @@ import { FocusContext } from "../contexts/FocusContext.js";
 import { ErrorOverview } from "./ErrorOverview.js";
 import { type ReadStream, type WriteStream } from "../types/io.js";
 import { EventEmitter } from "../utils/event-emitter.js";
+import { process } from "../utils/node-adapater.js";
 
 const tab = "\t";
 const shiftTab = "\u001B[Z";
@@ -134,6 +135,7 @@ export class App extends PureComponent<AppProps, State> {
       <AppContext.Provider
         value={{
           exit: this.handleExit,
+          platform: process?.platform,
         }}
       >
         <StdinContext.Provider
