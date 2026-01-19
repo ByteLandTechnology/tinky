@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/ByteLandTechnology/tinky/compare/v1.2.2...v1.3.0) (2026-01-19)
+
+### ✨ Features
+
+- add platform to AppProps and AppContext ([2e03e1c](https://github.com/ByteLandTechnology/tinky/commit/2e03e1c69e22cb1ad8ac4278a09359f7b3e25390))
+
 ## [1.2.2](https://github.com/ByteLandTechnology/tinky/compare/v1.2.1...v1.2.2) (2026-01-18)
 
 ### 📦 Build
