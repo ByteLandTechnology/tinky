@@ -13,6 +13,11 @@ export interface AppProps {
    * The platform the app is running on.
    */
   readonly platform?: string;
+
+  /**
+   * Environment variables.
+   */
+  readonly env?: Record<string, string | undefined>;
 }
 
 /**

@@ -10,6 +10,14 @@ Props for the AppContext.
 
 ## Properties
 
+### env?
+
+> `readonly` `optional` **env**: `Record`\<`string`, `string` \| `undefined`\>
+
+Environment variables.
+
+---
+
 ### exit()
 
 > `readonly` **exit**: (`error?`) => `void`
@@ -25,3 +33,11 @@ Exit (unmount) the whole Tinky app.
 #### Returns
 
 `void`
+
+---
+
+### platform?
+
+> `readonly` `optional` **platform**: `string`
+
+The platform the app is running on.

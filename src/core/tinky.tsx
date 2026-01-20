@@ -446,6 +446,7 @@ export class Tinky {
           writeToStderr={this.writeToStderr}
           exitOnCtrlC={this.options.exitOnCtrlC}
           onExit={this.unmount}
+          env={this.options.env}
         >
           {node}
         </App>

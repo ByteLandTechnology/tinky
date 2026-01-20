@@ -57,6 +57,11 @@ interface AppProps {
    * Callback called when the app exits.
    */
   readonly onExit: (error?: Error) => void;
+
+  /**
+   * Environment variables.
+   */
+  readonly env?: Record<string, string | undefined>;
 }
 
 /**
@@ -136,6 +141,7 @@ export class App extends PureComponent<AppProps, State> {
         value={{
           exit: this.handleExit,
           platform: process?.platform,
+          env: this.props.env,
         }}
       >
         <StdinContext.Provider
