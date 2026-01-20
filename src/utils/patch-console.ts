@@ -1,5 +1,3 @@
-import util from "util";
-
 /**
  * Union type representing the standard output streams.
  */
@@ -9,9 +7,9 @@ type Stream = "stdout" | "stderr";
  * Callback function to handle intercepted console output.
  *
  * @param stream - The stream the output is intended for ('stdout' or 'stderr').
- * @param data - The formatted string to be logged.
+ * @param args - The raw arguments passed to the console method.
  */
-type Callback = (stream: Stream, data: string) => void;
+type Callback = (stream: Stream, args: unknown[]) => void;
 
 /**
  * Generic signature for a console method.
@@ -57,18 +55,18 @@ const METHODS: ConsoleMethods = {
  *
  * This function wraps standard console methods (like `console.log`, `console.error`, etc.)
  * so that they call the provided callback instead of writing directly to the stream.
- * It uses `util.format` to format arguments exactly like the original console methods.
+ * It passes raw arguments to the callback, allowing the caller to handle formatting.
  *
  * @param callback - The function to call with the intercepted output.
  * @returns A function that restores the original console methods when called.
  *
  * @example
  * ```ts
- * const restore = patchConsole((stream, data) => {
- *   console.log(`[${stream}] ${data}`);
+ * const restore = patchConsole((stream, args) => {
+ *   console.log(`[${stream}] ${args.join(" ")}`);
  * });
  *
- * console.log("Hello"); // Output: [stdout] Hello
+ * console.log("Hello", "World"); // Output: [stdout] Hello World
  *
  * restore(); // Console is back to normal
  * ```
@@ -90,12 +88,12 @@ export const patchConsole = (callback: Callback): (() => void) => {
       if (method === "assert") {
         if (!args[0]) {
           // Remove the assertion condition and format the rest
-          callback(stream, util.format(...args.slice(1)));
+          callback(stream, args.slice(1));
         }
         return;
       }
 
-      callback(stream, util.format(...args));
+      callback(stream, args);
     };
   };
 

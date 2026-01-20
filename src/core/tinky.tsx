@@ -602,7 +602,8 @@ export class Tinky {
       return;
     }
 
-    this.restoreConsole = patchConsole((stream, data) => {
+    this.restoreConsole = patchConsole((stream, args) => {
+      const data = JSON.stringify(args);
       if (stream === "stdout") {
         this.writeToStdout(data);
       }
