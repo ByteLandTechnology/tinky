@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { throttle } from "es-toolkit/compat";
-import ansiEscapes from "ansi-escapes";
+import ansiEscapes from "../utils/ansi-escapes.js";
 import { isCI } from "../utils/check-ci.js";
 import autoBind from "auto-bind";
 import { onExit } from "../utils/signal-exit.js";

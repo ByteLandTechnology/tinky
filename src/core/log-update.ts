@@ -1,5 +1,5 @@
 import { type WriteStream } from "../types/io.js";
-import ansiEscapes from "ansi-escapes";
+import ansiEscapes from "../utils/ansi-escapes.js";
 import * as cliCursor from "../utils/cli-cursor.js";
 
 /**

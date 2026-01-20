@@ -40,7 +40,6 @@
   },
   "dependencies": {
     "@alcalzone/ansi-tokenize": "^0.2.3",
-    "ansi-escapes": "^7.2.0",
     "ansi-styles": "^6.2.3",
     "ansis": "^4.2.0",
     "auto-bind": "^5.0.1",
