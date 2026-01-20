@@ -1,3 +1,25 @@
+## [1.4.0](https://github.com/ByteLandTechnology/tinky/compare/v1.3.0...v1.4.0) (2026-01-20)
+
+### ✨ Features
+
+- **context:** add env to AppContext using RenderOptions ([233da66](https://github.com/ByteLandTechnology/tinky/commit/233da665f5cf22ba38bfb906299464128dd7a7ca))
+
+### 🐛 Bug Fixes
+
+- add missing .js extension to node-adapater import ([a22942b](https://github.com/ByteLandTechnology/tinky/commit/a22942bdeb4d2b19076afd9f897cd5fd79efaff5))
+- rename node-adapater to node-adapter and update imports ([169a3bc](https://github.com/ByteLandTechnology/tinky/commit/169a3bc53fdf6bf047bdf1dd5f52262f7e3b1dba))
+- replace util.format with JSON output in patchConsole for browser compatibility ([7fd0574](https://github.com/ByteLandTechnology/tinky/commit/7fd057446cfefa9e9cc2a90452cc011cf730d21c))
+
+### ♻️ Refactoring
+
+- replace ansi-escapes with local implementation ([e594079](https://github.com/ByteLandTechnology/tinky/commit/e5940797c36b16a6122e8d4fb7c9b98db44872bb))
+- simplify error stack display and remove unused dependencies ([7589a2f](https://github.com/ByteLandTechnology/tinky/commit/7589a2fb6db98a32968f7cb22d063b943239bfbb))
+- update parseKeypress to only accept string input ([02eebbc](https://github.com/ByteLandTechnology/tinky/commit/02eebbc51b75628ab2565aa9b4d852b6edc9be5c))
+
+### 🔧 Chores
+
+- upgrade taffy-layout to ^1.0.1 ([30f1dd3](https://github.com/ByteLandTechnology/tinky/commit/30f1dd38e2d189da9850d06fca3fe9495e69c987))
+
 ## [1.3.0](https://github.com/ByteLandTechnology/tinky/compare/v1.2.2...v1.3.0) (2026-01-19)
 
 ### ✨ Features
