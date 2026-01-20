@@ -8,7 +8,7 @@ import { FocusContext } from "../contexts/FocusContext.js";
 import { ErrorOverview } from "./ErrorOverview.js";
 import { type ReadStream, type WriteStream } from "../types/io.js";
 import { EventEmitter } from "../utils/event-emitter.js";
-import { process } from "../utils/node-adapater.js";
+import { process } from "../utils/node-adapter.js";
 
 const tab = "\t";
 const shiftTab = "\u001B[Z";

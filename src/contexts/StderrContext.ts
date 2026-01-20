@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { type WriteStream } from "../types/io.js";
-import { process } from "../utils/node-adapater.js";
+import { process } from "../utils/node-adapter.js";
 import { emptyStream } from "../utils/empty-stream.js";
 
 /**

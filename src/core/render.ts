@@ -6,7 +6,7 @@ import {
   type RenderMetrics,
 } from "./tinky.js";
 import { instances } from "./instances.js";
-import { process } from "../utils/node-adapater.js";
+import { process } from "../utils/node-adapter.js";
 import { emptyStream } from "../utils/empty-stream.js";
 
 /**

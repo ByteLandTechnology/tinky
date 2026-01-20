@@ -2,7 +2,7 @@ import StackUtils from "stack-utils";
 import codeExcerpt, { type CodeExcerpt } from "code-excerpt";
 import { Box } from "./Box.js";
 import { Text } from "./Text.js";
-import { fs, process } from "../utils/node-adapater.js";
+import { fs, process } from "../utils/node-adapter.js";
 
 // Error's source file is reported as file:///home/user/file.js
 // This function removes the file://[cwd] part

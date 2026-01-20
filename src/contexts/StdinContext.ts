@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { type ReadStream } from "../types/io.js";
 import { EventEmitter } from "../utils/event-emitter.js";
 import { emptyStream } from "../utils/empty-stream.js";
-import { process } from "../utils/node-adapater.js";
+import { process } from "../utils/node-adapter.js";
 
 /**
  * Props for the StdinContext.

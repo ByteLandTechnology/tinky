@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { type WriteStream } from "../types/io.js";
 import { emptyStream } from "../utils/empty-stream.js";
-import { process } from "../utils/node-adapater.js";
+import { process } from "../utils/node-adapter.js";
 
 /**
  * Props for StdoutContext.
