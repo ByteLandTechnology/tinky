@@ -1,5 +1,4 @@
 /* eslint-disable no-control-regex */
-import { Buffer } from "node:buffer";
 
 const metaKeyCodeRe = /^(?:\x1b)([a-zA-Z0-9])$/;
 
@@ -149,26 +148,13 @@ interface ParsedKey {
 }
 
 /**
- * Parses a keypress string or buffer into a structured key object.
+ * Parses a keypress string into a structured key object.
  *
- * @param s - The string or buffer to parse.
+ * @param s - The string to parse.
  * @returns The parsed key object.
  */
-export const parseKeypress = (s: Buffer | string = ""): ParsedKey => {
+export const parseKeypress = (s = ""): ParsedKey => {
   let parts;
-
-  if (Buffer.isBuffer(s)) {
-    if ((s[0] ?? 0) > 127 && s[1] === undefined) {
-      (s[0] as unknown as number) -= 128;
-      s = "\x1b" + String(s);
-    } else {
-      s = String(s);
-    }
-  } else if (s !== undefined && typeof s !== "string") {
-    s = String(s);
-  } else if (!s) {
-    s = "";
-  }
 
   const key: ParsedKey = {
     name: "",
