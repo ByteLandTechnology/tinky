@@ -54,7 +54,7 @@
     "slice-ansi": "^7.1.2",
     "stack-utils": "^2.0.6",
     "string-width": "^8.1.0",
-    "taffy-layout": "^0.1.0",
+    "taffy-layout": "^1.0.1",
     "tslint": "^5.20.1",
     "type-fest": "^5.4.1",
     "widest-line": "^5.0.0",
