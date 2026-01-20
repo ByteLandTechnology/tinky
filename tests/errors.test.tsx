@@ -33,7 +33,7 @@ test("catch and display error", () => {
 
   render(<Test />, { stdout });
   const output = stripAnsi(stdout.get()).split("\n");
-  const stackLine = output.find((line) => line.includes(" - Test"));
+  const stackLine = output.find((line) => line.includes("at Test"));
   expect(stackLine).toBeDefined();
-  expect(stackLine).toMatch(/ - Test \(.*tests\/errors\.test\.tsx:\d+:\d+\)/);
+  expect(stackLine).toMatch(/at Test \(.*tests\/errors\.test\.tsx:\d+:\d+\)/);
 });
