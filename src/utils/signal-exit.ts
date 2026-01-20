@@ -1,4 +1,4 @@
-import { process } from "./node-adapater";
+import { process } from "./node-adapater.js";
 
 type Callback = (code?: number | null, signal?: string | null) => void;
 

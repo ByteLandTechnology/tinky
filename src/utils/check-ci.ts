@@ -1,4 +1,4 @@
-import { process } from "./node-adapater";
+import { process } from "./node-adapater.js";
 /**
  * Checks if a specific environment variable is set and not explicitly disabled.
  *
