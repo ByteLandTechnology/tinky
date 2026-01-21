@@ -1,12 +1,8 @@
-<p align="center">
-  <h1 align="center">Tinky</h1>
-  <p align="center">
-    <strong>使用 Taffy 布局引擎重新构想的 React CLI 框架</strong>
-  </p>
-  <p align="center">
-    <a href="./README.md">English</a> · <a href="./README.ja-JP.md">日本語</a>
-  </p>
-</p>
+# ![Tinky](./tinky.svg) Tinky
+
+**使用 Taffy 布局引擎重新构想的 React CLI 框架**
+
+[English](./README.md) · [日本語](./README.ja-JP.md)
 
 ---
 

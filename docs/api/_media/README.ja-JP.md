@@ -1,12 +1,8 @@
-<p align="center">
-  <h1 align="center">Tinky</h1>
-  <p align="center">
-    <strong>Taffy レイアウトエンジンで再構築された React CLI フレームワーク</strong>
-  </p>
-  <p align="center">
-    <a href="./README.md">English</a> · <a href="./README.zh-CN.md">中文</a>
-  </p>
-</p>
+# ![Tinky](./tinky.svg) Tinky
+
+**Taffy レイアウトエンジンで再構築された React CLI フレームワーク**
+
+[English](./README.md) · [中文](./README.zh-CN.md)
 
 ---
 

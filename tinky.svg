@@ -1,0 +1,77 @@
+<svg width="25" height="25" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* Cycle Duration: 5s */
+    
+    /* 1. Left Object: Blue > morphs to Left Pane */
+    @keyframes morph-blue-left {
+      /* Prompt State (Blue >) */
+      0%, 15% { 
+        d: path("M 20 40 L 32 50 L 32 50 L 20 60 Z");
+      }
+      /* UI Left Pane (Blue Rect) */
+      25%, 75% { 
+        d: path("M 10 20 L 48 20 L 48 80 L 10 80 Z");
+      }
+      /* Back to Prompt */
+      85%, 100% { 
+        d: path("M 20 40 L 32 50 L 32 50 L 20 60 Z");
+      }
+    }
+
+    /* 2. Right Object: Red _ morphs to Right Pane */
+    @keyframes morph-red-right {
+      /* Cursor State (Red _) */
+      0%, 15% { 
+        x: 40px; y: 56px; width: 14px; height: 5px; rx: 1px;
+      }
+      /* UI Right Pane (Red Rect) */
+      25%, 75% { 
+        x: 52px; y: 20px; width: 38px; height: 60px; rx: 0px; 
+      }
+      /* Back to Cursor */
+      85%, 100% { 
+        x: 40px; y: 56px; width: 14px; height: 5px; rx: 1px;
+      }
+    }
+
+    /* 3. Green Border: Fades In */
+    @keyframes fade-border {
+      0%, 15% { opacity: 0; transform: scale(0.9); transform-origin: center; }
+      25%, 75% { opacity: 1; transform: scale(1); transform-origin: center; }
+      85%, 100% { opacity: 0; transform: scale(0.9); transform-origin: center; }
+    }
+    
+    /* 4. Cursor Blink (Only visible at start/end) */
+    @keyframes blink-red {
+       0%, 5%, 10%, 15% { opacity: 1; }
+       2.5%, 7.5%, 12.5% { opacity: 0; }
+       20%, 80% { opacity: 1; } /* Solid during morph/UI */
+       85%, 100% { opacity: 1; } 
+    }
+
+    .green-border {
+      animation: fade-border 5s ease-in-out infinite;
+    }
+
+    .blue-left {
+      animation: morph-blue-left 5s ease-in-out infinite;
+      fill: #007AFF;
+    }
+
+    .red-right {
+      animation: morph-red-right 5s ease-in-out infinite, blink-red 5s steps(1) infinite;
+      fill: #FF3B30;
+    }
+
+  </style>
+
+  <!-- Green Border (Scale/Fade) -->
+  <rect x="5" y="15" width="90" height="70" rx="6" stroke="#34C759" stroke-width="4" class="green-border" />
+
+  <!-- Left Object: Blue > to Blue Pane -->
+  <path class="blue-left" />
+
+  <!-- Right Object: Red _ to Red Pane -->
+  <rect class="red-right" />
+
+</svg>

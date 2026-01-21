@@ -1,12 +1,8 @@
-<p align="center">
-  <h1 align="center">Tinky</h1>
-  <p align="center">
-    <strong>React for CLIs, re-imagined with the Taffy layout engine</strong>
-  </p>
-  <p align="center">
-    <a href="./README.zh-CN.md">中文</a> · <a href="./README.ja-JP.md">日本語</a>
-  </p>
-</p>
+# ![Tinky](./tinky.svg) Tinky
+
+**React for CLIs, re-imagined with the Taffy layout engine**
+
+[中文](./README.zh-CN.md) · [日本語](./README.ja-JP.md)
 
 ---
 
