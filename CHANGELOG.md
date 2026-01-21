@@ -1,3 +1,9 @@
+## [1.4.1](https://github.com/ByteLandTechnology/tinky/compare/v1.4.0...v1.4.1) (2026-01-21)
+
+### 📚 Documentation
+
+- add logo and standardise README headers ([01d9568](https://github.com/ByteLandTechnology/tinky/commit/01d956853648294e265a041358f3afd3eb318dda))
+
 ## [1.4.0](https://github.com/ByteLandTechnology/tinky/compare/v1.3.0...v1.4.0) (2026-01-20)
 
 ### ✨ Features
