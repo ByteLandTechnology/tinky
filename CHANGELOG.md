@@ -1,3 +1,9 @@
+## [1.4.3](https://github.com/ByteLandTechnology/tinky/compare/v1.4.2...v1.4.3) (2026-02-03)
+
+### 🔧 Chores
+
+- **deps:** upgrade taffy-layout to v2.0.3 ([5d4f09a](https://github.com/ByteLandTechnology/tinky/commit/5d4f09a72208f1b328e9e4ed823f85f31c4b0c17))
+
 ## [1.4.2](https://github.com/ByteLandTechnology/tinky/compare/v1.4.1...v1.4.2) (2026-02-03)
 
 ### ♻️ Refactoring
