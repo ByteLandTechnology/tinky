@@ -50,7 +50,7 @@
     "react-reconciler": "^0.33.0",
     "slice-ansi": "^7.1.2",
     "string-width": "^8.1.0",
-    "taffy-layout": "^1.0.1",
+    "taffy-layout": "^2.0.3",
     "tslint": "^5.20.1",
     "type-fest": "^5.4.1",
     "widest-line": "^5.0.0",
