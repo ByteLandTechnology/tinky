@@ -1,3 +1,9 @@
+## [1.4.2](https://github.com/ByteLandTechnology/tinky/compare/v1.4.1...v1.4.2) (2026-02-03)
+
+### ♻️ Refactoring
+
+- replace cli-boxes dependency with local implementation ([d29847e](https://github.com/ByteLandTechnology/tinky/commit/d29847eade9c286c2c6d3475e850ba71d0d16d18))
+
 ## [1.4.1](https://github.com/ByteLandTechnology/tinky/compare/v1.4.0...v1.4.1) (2026-01-21)
 
 ### 📚 Documentation
