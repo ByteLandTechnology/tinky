@@ -1,7 +1,7 @@
 import { test, expect } from "bun:test";
 import boxen from "boxen";
 
-import cliBoxes from "cli-boxes";
+import { boxStyles } from "../src/core/box-styles.js";
 import ansis from "ansis";
 import { render, Box, Text } from "../src/index.js";
 import { renderToString } from "./helpers/render-to-string.js";
@@ -565,9 +565,9 @@ test("hide top border", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.left}Content${cliBoxes.round.right}`,
-      `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
-        cliBoxes.round.bottomRight
+      `${boxStyles.round.left}Content${boxStyles.round.right}`,
+      `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}${
+        boxStyles.round.bottomRight
       }`,
       "Below",
     ].join("\n"),
@@ -591,10 +591,10 @@ test("hide bottom border", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
-        cliBoxes.round.topRight
+      `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}${
+        boxStyles.round.topRight
       }`,
-      `${cliBoxes.round.left}Content${cliBoxes.round.right}`,
+      `${boxStyles.round.left}Content${boxStyles.round.right}`,
       "Below",
     ].join("\n"),
   );
@@ -617,7 +617,7 @@ test("hide top and bottom borders", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.left}Content${cliBoxes.round.right}`,
+      `${boxStyles.round.left}Content${boxStyles.round.right}`,
       "Below",
     ].join("\n"),
   );
@@ -640,9 +640,9 @@ test("hide left border", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.top.repeat(7)}${cliBoxes.round.topRight}`,
-      `Content${cliBoxes.round.right}`,
-      `${cliBoxes.round.bottom.repeat(7)}${cliBoxes.round.bottomRight}`,
+      `${boxStyles.round.top.repeat(7)}${boxStyles.round.topRight}`,
+      `Content${boxStyles.round.right}`,
+      `${boxStyles.round.bottom.repeat(7)}${boxStyles.round.bottomRight}`,
       "Below",
     ].join("\n"),
   );
@@ -665,9 +665,9 @@ test("hide right border", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}`,
-      `${cliBoxes.round.left}Content`,
-      `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}`,
+      `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}`,
+      `${boxStyles.round.left}Content`,
+      `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}`,
       "Below",
     ].join("\n"),
   );
@@ -690,9 +690,9 @@ test("hide left and right border", () => {
   expect(output).toBe(
     [
       "Above",
-      cliBoxes.round.top.repeat(7),
+      boxStyles.round.top.repeat(7),
       "Content",
-      cliBoxes.round.bottom.repeat(7),
+      boxStyles.round.bottom.repeat(7),
       "Below",
     ].join("\n"),
   );
@@ -739,13 +739,13 @@ test("change color of top border", () => {
     [
       "Above",
       ansis.green(
-        `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
-          cliBoxes.round.topRight
+        `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}${
+          boxStyles.round.topRight
         }`,
       ),
-      `${cliBoxes.round.left}Content${cliBoxes.round.right}`,
-      `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
-        cliBoxes.round.bottomRight
+      `${boxStyles.round.left}Content${boxStyles.round.right}`,
+      `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}${
+        boxStyles.round.bottomRight
       }`,
       "Below",
     ].join("\n"),
@@ -769,13 +769,13 @@ test("change color of bottom border", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
-        cliBoxes.round.topRight
+      `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}${
+        boxStyles.round.topRight
       }`,
-      `${cliBoxes.round.left}Content${cliBoxes.round.right}`,
+      `${boxStyles.round.left}Content${boxStyles.round.right}`,
       ansis.green(
-        `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
-          cliBoxes.round.bottomRight
+        `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}${
+          boxStyles.round.bottomRight
         }`,
       ),
       "Below",
@@ -800,12 +800,12 @@ test("change color of left border", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
-        cliBoxes.round.topRight
+      `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}${
+        boxStyles.round.topRight
       }`,
-      `${ansis.green(cliBoxes.round.left)}Content${cliBoxes.round.right}`,
-      `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
-        cliBoxes.round.bottomRight
+      `${ansis.green(boxStyles.round.left)}Content${boxStyles.round.right}`,
+      `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}${
+        boxStyles.round.bottomRight
       }`,
       "Below",
     ].join("\n"),
@@ -829,12 +829,12 @@ test("change color of right border", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
-        cliBoxes.round.topRight
+      `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}${
+        boxStyles.round.topRight
       }`,
-      `${cliBoxes.round.left}Content${ansis.green(cliBoxes.round.right)}`,
-      `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
-        cliBoxes.round.bottomRight
+      `${boxStyles.round.left}Content${ansis.green(boxStyles.round.right)}`,
+      `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}${
+        boxStyles.round.bottomRight
       }`,
       "Below",
     ].join("\n"),
@@ -903,13 +903,13 @@ test("dim top border color", () => {
     [
       "Above",
       ansis.dim(
-        `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
-          cliBoxes.round.topRight
+        `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}${
+          boxStyles.round.topRight
         }`,
       ),
-      `${cliBoxes.round.left}Content${cliBoxes.round.right}`,
-      `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
-        cliBoxes.round.bottomRight
+      `${boxStyles.round.left}Content${boxStyles.round.right}`,
+      `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}${
+        boxStyles.round.bottomRight
       }`,
       "Below",
     ].join("\n"),
@@ -934,13 +934,13 @@ test("dim bottom border color", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
-        cliBoxes.round.topRight
+      `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}${
+        boxStyles.round.topRight
       }`,
-      `${cliBoxes.round.left}Content${cliBoxes.round.right}`,
+      `${boxStyles.round.left}Content${boxStyles.round.right}`,
       ansis.dim(
-        `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
-          cliBoxes.round.bottomRight
+        `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}${
+          boxStyles.round.bottomRight
         }`,
       ),
       "Below",
@@ -966,12 +966,12 @@ test("dim left border color", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
-        cliBoxes.round.topRight
+      `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}${
+        boxStyles.round.topRight
       }`,
-      `${ansis.dim(cliBoxes.round.left)}Content${cliBoxes.round.right}`,
-      `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
-        cliBoxes.round.bottomRight
+      `${ansis.dim(boxStyles.round.left)}Content${boxStyles.round.right}`,
+      `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}${
+        boxStyles.round.bottomRight
       }`,
       "Below",
     ].join("\n"),
@@ -996,12 +996,12 @@ test("dim right border color", () => {
   expect(output).toBe(
     [
       "Above",
-      `${cliBoxes.round.topLeft}${cliBoxes.round.top.repeat(7)}${
-        cliBoxes.round.topRight
+      `${boxStyles.round.topLeft}${boxStyles.round.top.repeat(7)}${
+        boxStyles.round.topRight
       }`,
-      `${cliBoxes.round.left}Content${ansis.dim(cliBoxes.round.right)}`,
-      `${cliBoxes.round.bottomLeft}${cliBoxes.round.bottom.repeat(7)}${
-        cliBoxes.round.bottomRight
+      `${boxStyles.round.left}Content${ansis.dim(boxStyles.round.right)}`,
+      `${boxStyles.round.bottomLeft}${boxStyles.round.bottom.repeat(7)}${
+        boxStyles.round.bottomRight
       }`,
       "Below",
     ].join("\n"),

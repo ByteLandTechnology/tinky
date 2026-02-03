@@ -7,6 +7,8 @@
 ## Interfaces
 
 - [AppProps](interfaces/AppProps.md)
+- [Boxes](interfaces/Boxes.md)
+- [BoxStyle](interfaces/BoxStyle.md)
 - [Dimension](interfaces/Dimension.md)
 - [EventEmitter](interfaces/EventEmitter.md)
 - [FocusManager](interfaces/FocusManager.md)
@@ -51,6 +53,7 @@
 
 - [AppContext](variables/AppContext.md)
 - [Box](variables/Box.md)
+- [boxStyles](variables/boxStyles.md)
 - [StderrContext](variables/StderrContext.md)
 - [StdinContext](variables/StdinContext.md)
 - [StdoutContext](variables/StdoutContext.md)

@@ -202,7 +202,7 @@ false;
 
 ### borderStyle?
 
-> `readonly` `optional` **borderStyle**: `BoxStyle` \| keyof Boxes
+> `readonly` `optional` **borderStyle**: [`BoxStyle`](BoxStyle.md) \| keyof Boxes
 
 Border style.
 If `undefined` (default), no border is added.

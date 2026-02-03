@@ -46,6 +46,7 @@ export {
   type TinkyNode,
 } from "./core/dom.js";
 export { type Styles } from "./core/styles.js";
+export { boxStyles, type BoxStyle, type Boxes } from "./core/box-styles.js";
 export { type OutputTransformer } from "./core/render-node-to-output.js";
 export { type RenderMetrics } from "./core/tinky.js";
 export { type TaffyNode } from "./core/taffy-node.js";

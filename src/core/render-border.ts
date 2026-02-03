@@ -1,4 +1,4 @@
-import cliBoxes from "cli-boxes";
+import { boxStyles } from "./box-styles.js";
 import ansis from "ansis";
 import { colorize } from "../utils/colorize.js";
 import { type DOMNode } from "./dom.js";
@@ -27,7 +27,7 @@ export const renderBorder = (
 
     const box =
       typeof node.style.borderStyle === "string"
-        ? cliBoxes[node.style.borderStyle]
+        ? boxStyles[node.style.borderStyle]
         : node.style.borderStyle;
 
     const topBorderColor = node.style.borderTopColor ?? node.style.borderColor;
