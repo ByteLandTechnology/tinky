@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/ByteLandTechnology/tinky/compare/v1.4.3...v1.5.0) (2026-02-11)
+
+### ✨ Features
+
+- export EventEmitter as value in index.ts ([055b4f3](https://github.com/ByteLandTechnology/tinky/commit/055b4f31794fbce437063f15e9204cd1f8532e81))
+
 ## [1.4.3](https://github.com/ByteLandTechnology/tinky/compare/v1.4.2...v1.4.3) (2026-02-03)
 
 ### 🔧 Chores
