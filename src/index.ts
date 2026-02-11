@@ -50,4 +50,4 @@ export { boxStyles, type BoxStyle, type Boxes } from "./core/box-styles.js";
 export { type OutputTransformer } from "./core/render-node-to-output.js";
 export { type RenderMetrics } from "./core/tinky.js";
 export { type TaffyNode } from "./core/taffy-node.js";
-export { type EventEmitter, type Events } from "./utils/event-emitter.js";
+export { EventEmitter, type Events } from "./utils/event-emitter.js";
