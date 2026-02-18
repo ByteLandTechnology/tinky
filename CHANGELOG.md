@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/ByteLandTechnology/tinky/compare/v1.5.0...v1.6.0) (2026-02-18)
+
+### ✨ Features
+
+- add cell-based incremental rendering pipeline ([da15f0f](https://github.com/ByteLandTechnology/tinky/commit/da15f0ff16575a5beb9de24c3cce7748b78c61d4))
+
 ## [1.5.0](https://github.com/ByteLandTechnology/tinky/compare/v1.4.3...v1.5.0) (2026-02-11)
 
 ### ✨ Features
