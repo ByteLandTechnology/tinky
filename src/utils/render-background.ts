@@ -1,6 +1,6 @@
 import { colorize } from "./colorize.js";
 import { type DOMNode } from "../core/dom.js";
-import { type Output } from "../core/output.js";
+import { type OutputLike } from "../core/output.js";
 
 /**
  * Renders the background color of a node to the output.
@@ -14,7 +14,7 @@ export const renderBackground = (
   x: number,
   y: number,
   node: DOMNode,
-  output: Output,
+  output: OutputLike,
 ): void => {
   if (!node.style.backgroundColor) {
     return;

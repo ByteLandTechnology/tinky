@@ -7,7 +7,7 @@ import { squashTextNodes } from "../utils/squash-text-nodes.js";
 import { renderBorder } from "./render-border.js";
 import { renderBackground } from "../utils/render-background.js";
 import { type DOMElement } from "./dom.js";
-import { type Output } from "./output.js";
+import { type OutputLike } from "./output.js";
 
 /**
  * Applies padding to text based on the layout of the first text node.
@@ -143,7 +143,7 @@ export const renderNodeToScreenReaderOutput = (
  */
 export const renderNodeToOutput = (
   node: DOMElement,
-  output: Output,
+  output: OutputLike,
   options: {
     offsetX?: number;
     offsetY?: number;

@@ -39,6 +39,34 @@ test("clear screen when terminal width decreases", async () => {
 });
 
 /**
+ * Verifies that run-diff mode also clears and rerenders correctly on width decrease.
+ */
+test("run strategy clears and rerenders on width decrease", async () => {
+  const stdout = createStdout(100);
+
+  function Test() {
+    return (
+      <Box borderStyle="round">
+        <Text>Run Resize</Text>
+      </Box>
+    );
+  }
+
+  render(<Test />, { stdout, incrementalRendering: true });
+
+  const initialOutput = stripAnsi(stdout.get());
+  expect(initialOutput.includes("Run Resize")).toBeTrue();
+
+  stdout.columns = 60;
+  stdout.emit("resize");
+  await delay(100);
+
+  const afterResizeOutput = stripAnsi(stdout.get());
+  expect(afterResizeOutput.includes("Run Resize")).toBeTrue();
+  expect(initialOutput).not.toBe(afterResizeOutput);
+});
+
+/**
  * Verifies that screen is NOT explicitly cleared (just updated in place) when
  * width increases, as layout typically fits without corruption (unless it was
  * already wrapped, but Tinky optimizes for this).

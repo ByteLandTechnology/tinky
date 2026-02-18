@@ -15,6 +15,7 @@ export const cursorTo = (x: number, y?: number): string => {
 export const cursorUp = (count = 1): string => `${ESC}${count}A`;
 export const cursorNextLine = `${ESC}E`;
 export const cursorLeft = `${ESC}G`;
+export const cursorForward = (count = 1): string => `${ESC}${count}C`;
 
 export const eraseEndLine = `${ESC}K`;
 export const eraseLine = `${ESC}2K`;
@@ -40,6 +41,7 @@ const ansiEscapes = {
   cursorUp,
   cursorNextLine,
   cursorLeft,
+  cursorForward,
   eraseEndLine,
   eraseLine,
   eraseLines,

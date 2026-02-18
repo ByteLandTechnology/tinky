@@ -4,16 +4,20 @@
 
 # tinky
 
+## Classes
+
+- [EventEmitter](classes/EventEmitter.md)
+
 ## Interfaces
 
 - [AppProps](interfaces/AppProps.md)
 - [Boxes](interfaces/Boxes.md)
 - [BoxStyle](interfaces/BoxStyle.md)
 - [Dimension](interfaces/Dimension.md)
-- [EventEmitter](interfaces/EventEmitter.md)
 - [FocusManager](interfaces/FocusManager.md)
 - [FocusOptions](interfaces/FocusOptions.md)
 - [FocusState](interfaces/FocusState.md)
+- [IncrementalRenderingConfig](interfaces/IncrementalRenderingConfig.md)
 - [InputOptions](interfaces/InputOptions.md)
 - [Instance](interfaces/Instance.md)
 - [Key](interfaces/Key.md)
@@ -43,6 +47,7 @@
 - [ElementNames](type-aliases/ElementNames.md)
 - [Events](type-aliases/Events.md)
 - [ForegroundColorName](type-aliases/ForegroundColorName.md)
+- [IncrementalRenderingOption](type-aliases/IncrementalRenderingOption.md)
 - [InputHandler](type-aliases/InputHandler.md)
 - [NodeNames](type-aliases/NodeNames.md)
 - [OutputTransformer](type-aliases/OutputTransformer.md)

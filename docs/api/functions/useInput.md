@@ -6,7 +6,7 @@
 
 # Function: useInput()
 
-> **useInput**(`inputHandler`, `options`): `void`
+> **useInput**(`inputHandler`, `options?`): `void`
 
 This hook is used for handling user input. It's a more convenient
 alternative to using `StdinContext` and listening for `data` events.
@@ -22,7 +22,7 @@ with the whole string passed as `input`.
 
 The function to call when input is received.
 
-### options
+### options?
 
 [`InputOptions`](../interfaces/InputOptions.md) = `{}`
 

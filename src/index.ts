@@ -1,5 +1,9 @@
 export { type ReadStream, type WriteStream } from "./types/io.js";
 export { render, type RenderOptions, type Instance } from "./core/render.js";
+export {
+  type IncrementalRenderingConfig,
+  type IncrementalRenderingOption,
+} from "./core/render.js";
 export { Box, type BoxProps } from "./components/Box.js";
 export { Text, type TextProps } from "./components/Text.js";
 export { AppContext, type AppProps } from "./contexts/AppContext.js";

@@ -308,6 +308,32 @@ unmount();
 clear();
 ```
 
+### incrementalRendering
+
+你可以通过 `incrementalRendering` 控制 Tinky 更新交互帧的方式。run 模式会按
+终端单元格做 diff，只写入变化片段；line 模式按整行做 diff，并重写变化行。
+
+```tsx
+import { render } from "tinky";
+
+render(<App />, {
+  // 等价于: { strategy: "run" }
+  incrementalRendering: true,
+});
+
+render(<App />, {
+  incrementalRendering: { strategy: "line" },
+});
+
+render(<App />, {
+  incrementalRendering: { enabled: false },
+});
+```
+
+在 `debug`、屏幕阅读器和 CI 环境中，Tinky 会自动回退到非 run 路径。关于
+策略取舍和行为细节，请参阅
+[增量渲染指南](./docs/incremental-rendering.zh-CN.md)。
+
 ### measureElement(ref)
 
 测量已渲染元素的尺寸。
@@ -335,6 +361,18 @@ Tinky 使用 Bun 进行测试。运行测试套件：
 
 ```bash
 bun test
+```
+
+如需在本地做增量渲染性能基准测试，请运行：
+
+```bash
+bun run perf:render
+```
+
+如需执行与 CI 一致的性能门禁，请运行：
+
+```bash
+bun run perf:gate
 ```
 
 ## 📄 许可证

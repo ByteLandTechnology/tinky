@@ -4,7 +4,7 @@
 
 [tinky](../globals.md) / EventEmitter
 
-# Interface: EventEmitter
+# Class: EventEmitter
 
 A minimal EventEmitter implementation using mitt.
 
@@ -30,6 +30,16 @@ emitter.once("single", (payload) => {
   console.log("Called only once:", payload);
 });
 ```
+
+## Constructors
+
+### Constructor
+
+> **new EventEmitter**(): `EventEmitter`
+
+#### Returns
+
+`EventEmitter`
 
 ## Properties
 

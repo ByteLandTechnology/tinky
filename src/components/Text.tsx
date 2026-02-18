@@ -75,16 +75,22 @@ export function Text({
   const inheritedBackgroundColor = useContext(backgroundContext);
   const childrenOrAriaLabel =
     isScreenReaderEnabled && ariaLabel ? ariaLabel : children;
+  const effectiveBackgroundColor = backgroundColor ?? inheritedBackgroundColor;
+  const hasTextStyle =
+    color !== undefined ||
+    effectiveBackgroundColor !== undefined ||
+    dimColor ||
+    bold ||
+    italic ||
+    underline ||
+    strikethrough ||
+    inverse;
 
   if (childrenOrAriaLabel === undefined || childrenOrAriaLabel === null) {
     return null;
   }
 
   const transform = (children: string): string => {
-    // Use explicit backgroundColor if provided, otherwise use inherited from parent Box
-    const effectiveBackgroundColor =
-      backgroundColor ?? inheritedBackgroundColor;
-
     return applyTextStyles(children, {
       color,
       backgroundColor: effectiveBackgroundColor,
@@ -109,7 +115,7 @@ export function Text({
         flexDirection: "row",
         textWrap: wrap,
       }}
-      internal_transform={transform}
+      internal_transform={hasTextStyle ? transform : undefined}
     >
       {isScreenReaderEnabled && ariaLabel ? ariaLabel : children}
     </tinky-text>

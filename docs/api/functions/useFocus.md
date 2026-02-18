@@ -6,7 +6,7 @@
 
 # Function: useFocus()
 
-> **useFocus**(`options`): [`FocusState`](../interfaces/FocusState.md)
+> **useFocus**(`options?`): [`FocusState`](../interfaces/FocusState.md)
 
 A component that uses the `useFocus` hook becomes "focusable" to Tinky, so
 when the user presses <kbd>Tab</kbd>, Tinky will switch focus to this
@@ -17,7 +17,7 @@ this component is focused.
 
 ## Parameters
 
-### options
+### options?
 
 [`FocusOptions`](../interfaces/FocusOptions.md) = `{}`
 

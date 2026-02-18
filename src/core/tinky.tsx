@@ -12,12 +12,22 @@ import wrapAnsi from "wrap-ansi";
 import { type ReadStream, type WriteStream } from "../types/io.js";
 import { reconciler } from "./reconciler.js";
 import { renderer } from "./renderer.js";
+import { cellRenderer } from "./cell-renderer.js";
 import * as dom from "./dom.js";
 import { logUpdate, type LogUpdate } from "./log-update.js";
+import {
+  cellLogUpdateRun,
+  type CellLogUpdateRender,
+} from "./cell-log-update-run.js";
 import { instances } from "./instances.js";
 import { App } from "../components/App.js";
 import { AccessibilityContext } from "../contexts/AccessibilityContext.js";
 import { type TaffyNode } from "./taffy-node.js";
+import { CellBuffer, StyleRegistry } from "./cell-buffer.js";
+import {
+  normalizeIncrementalRendering,
+  type IncrementalRenderingOption,
+} from "./incremental-rendering.js";
 
 const noop = () => {
   // no-op
@@ -93,10 +103,15 @@ export interface Options {
   maxFps?: number;
 
   /**
-   * Enable incremental rendering mode which only updates changed lines instead
-   * of redrawing the entire output.
+   * Configure incremental rendering mode.
+   *
+   * - `true`: Enables run-diff incremental rendering.
+   * - `false` or omitted: Disables incremental rendering.
+   * - `{ enabled: false }`: Disables incremental rendering.
+   * - `{ strategy: "line" }`: Enables line-diff incremental rendering.
+   * - `{ strategy: "run" }` (or omitted strategy): Enables run-diff rendering.
    */
-  incrementalRendering?: boolean;
+  incrementalRendering?: IncrementalRenderingOption;
 
   /**
    * Environment variables.
@@ -139,6 +154,16 @@ export class Tinky {
   private readonly unsubscribeResize?: () => void;
   /** Whether we are running in a CI environment. */
   private readonly isCI: boolean;
+  /** Whether run-diff incremental rendering is active for this instance. */
+  private readonly usesRunIncrementalRendering: boolean;
+  /** Run-diff log updater. */
+  private readonly cellLog?: CellLogUpdateRender;
+  /** Shared style registry for run buffers. */
+  private readonly styleRegistry?: StyleRegistry;
+  /** Previous rendered frame for run-diff strategy. */
+  private frontBuffer?: CellBuffer;
+  /** Current frame render target for run-diff strategy. */
+  private backBuffer?: CellBuffer;
 
   /**
    * Creates an instance of Tinky.
@@ -156,6 +181,19 @@ export class Tinky {
       options.isScreenReaderEnabled ??
       options.env?.["TINKY_SCREEN_READER"] === "true";
 
+    this.isCI = isCI(options.env);
+    const incrementalRenderStrategy = normalizeIncrementalRendering(
+      options.incrementalRendering,
+    );
+    // Run-diff uses cursor addressing and interactive frame tracking, so we keep
+    // existing render paths in debug/screen-reader/CI modes.
+    this.usesRunIncrementalRendering =
+      incrementalRenderStrategy === "run" &&
+      !options.debug &&
+      !this.isScreenReaderEnabled &&
+      !this.isCI;
+
+    const useLineIncremental = incrementalRenderStrategy === "line";
     const unthrottled = options.debug || this.isScreenReaderEnabled;
     const maxFps = options.maxFps ?? 30;
     const renderThrottleMs =
@@ -170,7 +208,7 @@ export class Tinky {
 
     this.rootNode.onImmediateRender = this.onRender;
     this.log = logUpdate.create(options.stdout, {
-      incremental: options.incrementalRendering,
+      incremental: useLineIncremental,
     });
     this.throttledLog = unthrottled
       ? this.log
@@ -178,6 +216,24 @@ export class Tinky {
           leading: true,
           trailing: true,
         }) as unknown as LogUpdate);
+
+    if (this.usesRunIncrementalRendering) {
+      this.styleRegistry = new StyleRegistry();
+      this.frontBuffer = new CellBuffer(
+        { width: 0, height: 0 },
+        this.styleRegistry,
+      );
+      this.backBuffer = new CellBuffer(
+        { width: 0, height: 0 },
+        this.styleRegistry,
+      );
+      this.cellLog = cellLogUpdateRun.create(options.stdout, {
+        incremental: true,
+        mergeStrategy: "cost",
+        maxSegmentsBeforeFullRow: 12,
+        overwriteGapPenaltyBytes: 0,
+      });
+    }
 
     // Ignore last render after unmounting a tree to prevent empty output before
     // exit
@@ -221,8 +277,6 @@ export class Tinky {
       });
     }
 
-    this.isCI = isCI(options.env);
-
     if (this.options.patchConsole) {
       this.patchConsole();
     }
@@ -257,8 +311,15 @@ export class Tinky {
     if (currentWidth < this.lastTerminalWidth) {
       // We clear the screen when decreasing terminal width to prevent duplicate
       // overlapping re-renders.
-      this.log.clear();
+      if (this.usesRunIncrementalRendering) {
+        this.cellLog?.clear();
+        this.frontBuffer?.resize(0, 0);
+        this.frontBuffer?.clear();
+      } else {
+        this.log.clear();
+      }
       this.lastOutput = "";
+      this.lastOutputHeight = 0;
     }
 
     this.calculateLayout();
@@ -321,6 +382,57 @@ export class Tinky {
    */
   onRender: () => void = () => {
     if (this.isUnmounted) {
+      return;
+    }
+
+    if (this.usesRunIncrementalRendering && this.backBuffer) {
+      const startTime = performance.now();
+      const { buffer, outputHeight, staticOutput } = cellRenderer(
+        this.rootNode,
+        this.backBuffer,
+        false,
+      );
+
+      this.options.onRender?.({ renderTime: performance.now() - startTime });
+
+      const hasStaticOutput = staticOutput && staticOutput !== "\n";
+      if (hasStaticOutput) {
+        this.fullStaticOutput += staticOutput;
+      }
+
+      if (
+        this.options.stdout.rows &&
+        this.lastOutputHeight >= this.options.stdout.rows
+      ) {
+        const output = buffer.toString();
+        this.options.stdout.write(
+          ansiEscapes.clearTerminal + this.fullStaticOutput + output,
+        );
+        this.lastOutput = output;
+        this.lastOutputHeight = outputHeight;
+        this.cellLog?.sync(buffer);
+        this.swapRunBuffers();
+        return;
+      }
+
+      if (hasStaticOutput) {
+        // Static output is appended once, then the interactive frame is redrawn.
+        this.cellLog?.clear();
+        this.options.stdout.write(staticOutput);
+        if (this.frontBuffer && this.cellLog) {
+          this.cellLog(this.frontBuffer, buffer, { forceFull: true });
+          this.swapRunBuffers();
+        }
+      } else if (
+        this.frontBuffer &&
+        this.cellLog &&
+        !this.isRunFrameEqual(buffer)
+      ) {
+        this.cellLog(this.frontBuffer, buffer);
+        this.swapRunBuffers();
+      }
+
+      this.lastOutputHeight = outputHeight;
       return;
     }
 
@@ -428,6 +540,32 @@ export class Tinky {
     this.lastOutputHeight = outputHeight;
   };
 
+  private isRunFrameEqual(nextBuffer: CellBuffer): boolean {
+    return this.frontBuffer?.isEqual(nextBuffer) ?? false;
+  }
+
+  /**
+   * Swaps front and back buffers. After swap, the caller's newly-rendered
+   * frame becomes the front buffer. The old front becomes the back buffer
+   * and will be cleared by cellRenderer (resize + clear) at the start of
+   * the next render cycle.
+   */
+  private swapRunBuffers() {
+    const previous = this.frontBuffer;
+    this.frontBuffer = this.backBuffer;
+    this.backBuffer = previous;
+  }
+
+  private redrawRunBuffer() {
+    if (!this.frontBuffer || !this.cellLog) {
+      return;
+    }
+
+    this.cellLog(this.frontBuffer, this.frontBuffer, { forceFull: true });
+    this.lastOutput = this.frontBuffer.toString();
+    this.lastOutputHeight = this.frontBuffer.height;
+  }
+
   /**
    * Renders the given React node.
    *
@@ -477,6 +615,13 @@ export class Tinky {
       return;
     }
 
+    if (this.usesRunIncrementalRendering) {
+      this.cellLog?.clear();
+      this.options.stdout.write(data);
+      this.redrawRunBuffer();
+      return;
+    }
+
     this.log.clear();
     this.options.stdout.write(data);
     this.log(this.lastOutput);
@@ -500,6 +645,13 @@ export class Tinky {
 
     if (this.isCI) {
       this.options.stderr.write(data);
+      return;
+    }
+
+    if (this.usesRunIncrementalRendering) {
+      this.cellLog?.clear();
+      this.options.stderr.write(data);
+      this.redrawRunBuffer();
       return;
     }
 
@@ -540,7 +692,11 @@ export class Tinky {
     if (this.isCI) {
       this.options.stdout.write(this.lastOutput + "\n");
     } else if (!this.options.debug) {
-      this.log.done();
+      if (this.usesRunIncrementalRendering) {
+        this.cellLog?.done();
+      } else {
+        this.log.done();
+      }
     }
 
     this.isUnmounted = true;
@@ -591,7 +747,11 @@ export class Tinky {
     const isCiEnv = isCI(this.options.env);
 
     if (!isCiEnv) {
-      this.log.clear();
+      if (this.usesRunIncrementalRendering) {
+        this.cellLog?.clear();
+      } else {
+        this.log.clear();
+      }
     }
   }
 

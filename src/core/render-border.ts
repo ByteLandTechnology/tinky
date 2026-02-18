@@ -2,7 +2,7 @@ import { boxStyles } from "./box-styles.js";
 import ansis from "ansis";
 import { colorize } from "../utils/colorize.js";
 import { type DOMNode } from "./dom.js";
-import { type Output } from "./output.js";
+import { type OutputLike } from "./output.js";
 
 /**
  * Renders the border for a DOM node.
@@ -18,7 +18,7 @@ export const renderBorder = (
   x: number,
   y: number,
   node: DOMNode,
-  output: Output,
+  output: OutputLike,
 ): void => {
   if (node.style.borderStyle) {
     const layout = node.taffyNode?.tree.getLayout(node.taffyNode.id);

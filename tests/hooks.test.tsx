@@ -341,10 +341,35 @@ test("useStdout - write to stdout", async () => {
 });
 
 /**
+ * Verifies that stdout writes still restore the interactive frame in run mode.
+ */
+test("useStdout - write to stdout in run mode", async () => {
+  const ps = term("use-stdout-run");
+  await ps.waitForExit();
+
+  const output = stripAnsi(ps.output);
+  expect(output.includes("Hello from run mode stdout")).toBeTrue();
+  expect(output.includes("Hello Run Mode")).toBeTrue();
+  expect(output.includes("exited")).toBeTrue();
+});
+
+/**
  * Verifies that `useStderr` allows writing errors directly to stderr.
  */
 test("useStderr - write to stderr", async () => {
   const ps = term("use-stderr");
   await ps.waitForExit();
   expect(ps.output.includes("Error Output")).toBeTrue();
+});
+
+/**
+ * Verifies that stderr writes still restore the interactive frame in run mode.
+ */
+test("useStderr - write to stderr in run mode", async () => {
+  const ps = term("use-stderr-run");
+  await ps.waitForExit();
+
+  const output = stripAnsi(ps.output);
+  expect(output.includes("Run mode error output")).toBeTrue();
+  expect(output.includes("Run mode stderr")).toBeTrue();
 });

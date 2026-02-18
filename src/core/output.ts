@@ -11,6 +11,37 @@ import { type OutputTransformer } from "./render-node-to-output.js";
 import { type Dimension } from "../utils/dimension.js";
 
 /**
+ * Options for writing text to an output target.
+ */
+export interface OutputWriteOptions {
+  /** Array of transformers to apply to each rendered line. */
+  transformers: OutputTransformer[];
+}
+
+/**
+ * Represents a clipping rectangle.
+ */
+export interface Clip {
+  /** Left boundary (undefined for no limit). */
+  x1: number | undefined;
+  /** Right boundary (undefined for no limit). */
+  x2: number | undefined;
+  /** Top boundary (undefined for no limit). */
+  y1: number | undefined;
+  /** Bottom boundary (undefined for no limit). */
+  y2: number | undefined;
+}
+
+/**
+ * Shared write/clip/unclip surface used by render traversal.
+ */
+export interface OutputLike {
+  write(x: number, y: number, text: string, options: OutputWriteOptions): void;
+  clip(clip: Clip): void;
+  unclip(): void;
+}
+
+/**
  * Union type for possible operations on the output.
  */
 type Operation = WriteOperation | ClipOperation | UnclipOperation;
@@ -27,8 +58,8 @@ interface WriteOperation {
   y: number;
   /** Text content to write. */
   text: string;
-  /** Array of transformers to apply to the text. */
-  transformers: OutputTransformer[];
+  /** Options for rendering the text. */
+  options: OutputWriteOptions;
 }
 
 /**
@@ -39,20 +70,6 @@ interface ClipOperation {
   type: "clip";
   /** Clipping rectangle definition. */
   clip: Clip;
-}
-
-/**
- * Represents a clipping rectangle.
- */
-interface Clip {
-  /** Left boundary (undefined for no limit). */
-  x1: number | undefined;
-  /** Right boundary (undefined for no limit). */
-  x2: number | undefined;
-  /** Top boundary (undefined for no limit). */
-  y1: number | undefined;
-  /** Bottom boundary (undefined for no limit). */
-  y2: number | undefined;
 }
 
 /**
@@ -71,7 +88,7 @@ interface UnclipOperation {
  *
  * Used to generate the final output of all nodes before writing to stdout.
  */
-export class Output {
+export class Output implements OutputLike {
   width: number;
   height: number;
 
@@ -97,14 +114,7 @@ export class Output {
    * @param text - The text to write.
    * @param options - Options containing transformers.
    */
-  write(
-    x: number,
-    y: number,
-    text: string,
-    options: { transformers: OutputTransformer[] },
-  ): void {
-    const { transformers } = options;
-
+  write(x: number, y: number, text: string, options: OutputWriteOptions): void {
     if (!text) {
       return;
     }
@@ -114,7 +124,7 @@ export class Output {
       x,
       y,
       text,
-      transformers,
+      options,
     });
   }
 
@@ -147,11 +157,14 @@ export class Output {
   get(): { output: string; height: number } {
     // Initialize output array with a specific set of rows, so that
     // margin/padding at the bottom is preserved
-    const output: StyledChar[][] = [];
+    const output: (StyledChar | undefined)[][] = [];
+    // Tracks whether a cell was explicitly written this frame.
+    const touched: boolean[][] = [];
+    // Preserves intentional trailing spaces produced by transformers.
+    const preserveTrailingSpace: boolean[][] = [];
 
     for (let y = 0; y < this.height; y++) {
-      const row: StyledChar[] = [];
-
+      const row: (StyledChar | undefined)[] = [];
       for (let x = 0; x < this.width; x++) {
         row.push({
           type: "char",
@@ -161,7 +174,11 @@ export class Output {
         });
       }
 
+      const rowTouched = new Array<boolean>(this.width).fill(false);
+      const rowPreserve = new Array<boolean>(this.width).fill(false);
       output.push(row);
+      touched.push(rowTouched);
+      preserveTrailingSpace.push(rowPreserve);
     }
 
     const clips: Clip[] = [];
@@ -176,9 +193,11 @@ export class Output {
       }
 
       if (operation.type === "write") {
-        const { text, transformers } = operation;
+        const { text } = operation;
+        const { transformers } = operation.options;
         let { x, y } = operation;
         let lines = text.split("\n");
+        const preserveLineTrailingSpaces = transformers.length > 0;
 
         const clip = clips.at(-1);
 
@@ -243,11 +262,14 @@ export class Output {
         let offsetY = 0;
 
         for (const [index, line] of lines.entries()) {
-          const currentLine = output[y + offsetY];
+          const rowIndex = y + offsetY;
+          const currentLine = output[rowIndex];
+          const touchedRow = touched[rowIndex];
+          const preserveRow = preserveTrailingSpace[rowIndex];
 
           // Line can be missing if `text` is taller than height of
           // pre-initialized `this.output`
-          if (!currentLine) {
+          if (!currentLine || !touchedRow || !preserveRow) {
             continue;
           }
 
@@ -261,6 +283,8 @@ export class Output {
 
           for (const character of characters) {
             currentLine[offsetX] = character;
+            touchedRow[offsetX] = true;
+            preserveRow[offsetX] = preserveLineTrailingSpaces;
 
             // Determine printed width using string-width to align with measurement
             const characterWidth = Math.max(1, stringWidth(character.value));
@@ -275,6 +299,8 @@ export class Output {
                   fullWidth: false,
                   styles: character.styles,
                 };
+                touchedRow[offsetX + index] = true;
+                preserveRow[offsetX + index] = preserveLineTrailingSpaces;
               }
             }
 
@@ -287,9 +313,56 @@ export class Output {
     }
 
     const generatedOutput = output
-      .map((line) => {
-        const lineWithoutEmptyItems = line.filter((item) => item !== undefined);
-        return styledCharsToString(lineWithoutEmptyItems).trimEnd();
+      .map((line, rowIndex) => {
+        const rowTouched = touched[rowIndex] ?? [];
+        const rowPreserve = preserveTrailingSpace[rowIndex] ?? [];
+
+        const compactLine: StyledChar[] = [];
+        const compactTouched: boolean[] = [];
+        const compactPreserve: boolean[] = [];
+
+        for (let index = 0; index < line.length; index++) {
+          const item = line[index];
+          if (item === undefined) {
+            continue;
+          }
+
+          compactLine.push(item);
+          compactTouched.push(rowTouched[index] === true);
+          compactPreserve.push(rowPreserve[index] === true);
+        }
+
+        let end = compactLine.length - 1;
+        while (end >= 0) {
+          const item = compactLine[end];
+          if (!item) {
+            end--;
+            continue;
+          }
+
+          if (!compactTouched[end]) {
+            end--;
+            continue;
+          }
+
+          const canTrimUnstyledSpace =
+            item.type === "char" &&
+            item.value === " " &&
+            item.styles.length === 0 &&
+            !compactPreserve[end];
+          if (canTrimUnstyledSpace) {
+            end--;
+            continue;
+          }
+
+          break;
+        }
+
+        if (end < 0) {
+          return "";
+        }
+
+        return styledCharsToString(compactLine.slice(0, end + 1));
       })
       .join("\n");
 

@@ -6,7 +6,7 @@ import ansiEscapes from "ansi-escapes";
 import stripAnsi from "strip-ansi";
 import boxen from "boxen";
 import delay from "delay";
-import { render, Box, Text, useInput } from "../src/index.js";
+import { render, Box, Text, Transform, useInput } from "../src/index.js";
 import { type RenderMetrics } from "../src/core/tinky.js";
 import { createStdout } from "./helpers/create-stdout.js";
 import { createStdin } from "./helpers/create-stdin.js";
@@ -214,6 +214,73 @@ test("rerender on resize", async () => {
 
   unmount();
   expect(stdout.listeners("resize").length).toBe(0);
+});
+
+/**
+ * Verifies that `incrementalRendering: true` maps to run-diff strategy.
+ */
+test("incrementalRendering true uses run strategy", async () => {
+  const stdout = createStdout();
+
+  const { rerender, unmount } = render(<Text>z12345</Text>, {
+    stdout,
+    patchConsole: false,
+    maxFps: 1000,
+    incrementalRendering: true,
+  });
+
+  rerender(<Text>a12345</Text>);
+  await delay(50);
+
+  const secondCall = stdout.secondCall();
+  expect(secondCall.includes("a")).toBeTrue();
+  expect(secondCall.includes("a12345")).toBeFalse();
+
+  unmount();
+});
+
+/**
+ * Verifies that explicit line strategy keeps the previous line-diff behavior.
+ */
+test("incrementalRendering line strategy keeps line-diff updates", async () => {
+  const stdout = createStdout();
+
+  const { rerender, unmount } = render(<Text>z12345</Text>, {
+    stdout,
+    patchConsole: false,
+    maxFps: 1000,
+    incrementalRendering: { strategy: "line" },
+  });
+
+  rerender(<Text>a12345</Text>);
+  await delay(50);
+
+  const secondCall = stdout.secondCall();
+  expect(secondCall.includes("a12345")).toBeTrue();
+
+  unmount();
+});
+
+/**
+ * Verifies that run strategy keeps transformer-produced trailing spaces.
+ */
+test("incrementalRendering run strategy preserves transformed trailing spaces", () => {
+  const stdout = createStdout();
+
+  const { unmount } = render(
+    <Transform transform={(value: string) => `${value}  `}>
+      <Text>X</Text>
+    </Transform>,
+    {
+      stdout,
+      patchConsole: false,
+      maxFps: 1000,
+      incrementalRendering: true,
+    },
+  );
+
+  expect(stdout.firstCall()).toBe("X  \n");
+  unmount();
 });
 
 function ThrottleTestComponent({ text }: { readonly text: string }) {

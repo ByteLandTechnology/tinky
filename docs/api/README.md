@@ -312,6 +312,33 @@ unmount();
 clear();
 ```
 
+### incrementalRendering
+
+Use `incrementalRendering` to control how Tinky updates interactive frames.
+Run mode diffs terminal cells and writes minimal changed runs. Line mode diffs
+whole lines and rewrites changed lines.
+
+```tsx
+import { render } from "tinky";
+
+render(<App />, {
+  // Equivalent to: { strategy: "run" }
+  incrementalRendering: true,
+});
+
+render(<App />, {
+  incrementalRendering: { strategy: "line" },
+});
+
+render(<App />, {
+  incrementalRendering: { enabled: false },
+});
+```
+
+Tinky automatically falls back to non-run paths in `debug`, screen-reader, and
+CI environments. For strategy trade-offs and behavior details, read
+[Incremental rendering guide](_media/incremental-rendering.md).
+
 ### measureElement(ref)
 
 Measure the dimensions of a rendered element.
@@ -339,6 +366,18 @@ Tinky uses Bun for testing. Run the test suite:
 
 ```bash
 bun test
+```
+
+To benchmark incremental rendering locally, run:
+
+```bash
+bun run perf:render
+```
+
+To enforce the performance threshold used by CI, run:
+
+```bash
+bun run perf:gate
 ```
 
 ## 📄 License

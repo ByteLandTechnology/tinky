@@ -12,7 +12,7 @@ Props for the StdinContext.
 
 ### internal_eventEmitter
 
-> `readonly` **internal_eventEmitter**: [`EventEmitter`](EventEmitter.md)
+> `readonly` **internal_eventEmitter**: [`EventEmitter`](../classes/EventEmitter.md)
 
 Internal event emitter for handling input events.
 

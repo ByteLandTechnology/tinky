@@ -9,6 +9,12 @@ import { instances } from "./instances.js";
 import { process } from "../utils/node-adapter.js";
 import { emptyStream } from "../utils/empty-stream.js";
 
+import {
+  type IncrementalRenderingConfig,
+  type IncrementalRenderingOption,
+} from "./incremental-rendering.js";
+export type { IncrementalRenderingConfig, IncrementalRenderingOption };
+
 /**
  * Options for the render function.
  */
@@ -81,13 +87,23 @@ export interface RenderOptions {
   maxFps?: number;
 
   /**
-   * Enable incremental rendering mode which only updates changed lines instead
-   * of redrawing the entire output. Reduces flickering and improves
-   * performance.
+   * Configure incremental rendering mode.
+   *
+   * - `true`: Enables run-diff incremental rendering.
+   * - `false` or omitted: Disables incremental rendering.
+   * - Object mode:
+   *   - `{ enabled: false }` disables incremental rendering.
+   *   - `{ strategy: "line" }` enables line-diff incremental rendering.
+   *   - `{ strategy: "run" }` (or omitted strategy) enables run-diff rendering.
+   *
+   * Runtime notes:
+   * - In `debug` mode, Tinky always writes full frames.
+   * - In screen-reader mode, Tinky uses the screen-reader output path.
+   * - In CI mode, Tinky avoids cursor-diff updates.
    *
    * @defaultValue false
    */
-  incrementalRendering?: boolean;
+  incrementalRendering?: IncrementalRenderingOption;
 
   /**
    * Environment variables.
