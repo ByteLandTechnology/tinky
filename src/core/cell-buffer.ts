@@ -93,6 +93,12 @@ export class CellBuffer {
    */
   preserveTrailingSpace: Uint8Array = new Uint8Array(0);
 
+  /**
+   * Marks whether a row has been touched by any write operation.
+   * Used to optimize isRowEqual/diffing.
+   */
+  rowTouched: Uint8Array = new Uint8Array(0);
+
   constructor(
     size: CellBufferSize = { width: 0, height: 0 },
     styleRegistry?: StyleRegistry,
@@ -119,6 +125,7 @@ export class CellBuffer {
     this.styleIds = new Uint32Array(size);
     this.touched = new Uint8Array(size);
     this.preserveTrailingSpace = new Uint8Array(size);
+    this.rowTouched = new Uint8Array(nextHeight);
   }
 
   clear(styleId = 0): void {
@@ -128,6 +135,13 @@ export class CellBuffer {
     this.styleIds.fill(styleId, 0, size);
     this.touched.fill(0, 0, size);
     this.preserveTrailingSpace.fill(0, 0, size);
+
+    // Only rows with default style (0) are considered "untouched" for optimization
+    if (styleId === 0) {
+      this.rowTouched.fill(0);
+    } else {
+      this.rowTouched.fill(1);
+    }
   }
 
   /**
@@ -160,6 +174,7 @@ export class CellBuffer {
     this.styleIds[cellIndex] = styleId;
     this.touched[cellIndex] = 1;
     this.preserveTrailingSpace[cellIndex] = preserveTrailing ? 1 : 0;
+    this.rowTouched[y] = 1;
 
     if (width > 1) {
       for (let i = 1; i < width; i++) {
@@ -205,6 +220,7 @@ export class CellBuffer {
       this.styleIds.fill(styleId, start, end);
       this.touched.fill(1, start, end);
       this.preserveTrailingSpace.fill(0, start, end);
+      this.rowTouched[y] = 1;
       return;
     }
 
@@ -221,6 +237,11 @@ export class CellBuffer {
 
     if (row < 0 || row >= this.height) {
       return false;
+    }
+
+    // Optimization: if both rows are untouched (empty/default), they are equal
+    if (!this.rowTouched[row] && !other.rowTouched[row]) {
+      return true;
     }
 
     const start = row * this.width;
@@ -272,6 +293,10 @@ export class CellBuffer {
   getRowRightEdge(row: number): number {
     const width = this.width;
     if (row < 0 || row >= this.height) {
+      return 0;
+    }
+
+    if (!this.rowTouched[row]) {
       return 0;
     }
 
@@ -413,10 +438,27 @@ export class CellBuffer {
    * Serializes the entire buffer into a multi-line ANSI string.
    */
   toString(): string {
-    const lines: string[] = [];
+    const out: string[] = [];
     for (let row = 0; row < this.height; row++) {
-      lines.push(this.serializeRow(row));
+      if (row > 0) {
+        out.push("\n");
+      }
+
+      const rightEdge = this.getRowRightEdge(row);
+      if (rightEdge === 0) {
+        continue;
+      }
+
+      const { activeStyleId } = this.appendStyledRange(
+        row,
+        0,
+        rightEdge,
+        out,
+        0,
+        0,
+      );
+      this.appendCloseActiveStyle(out, activeStyleId);
     }
-    return lines.join("\n");
+    return out.join("");
   }
 }
