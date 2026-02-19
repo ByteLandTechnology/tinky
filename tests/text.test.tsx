@@ -48,7 +48,7 @@ test("text with dim+bold", () => {
   );
   expect(output).toEqual(
     styledCharsToString(
-      styledCharsFromTokens(tokenize(ansis.bold.dim("Test"))),
+      styledCharsFromTokens(tokenize(ansis.dim(ansis.bold("Test")))),
     ),
   );
 });

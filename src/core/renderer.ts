@@ -2,7 +2,8 @@ import {
   renderNodeToOutput,
   renderNodeToScreenReaderOutput,
 } from "./render-node-to-output.js";
-import { Output } from "./output.js";
+import { CellBuffer } from "./cell-buffer.js";
+import { CellOutput } from "./cell-output.js";
 import { type DOMElement } from "./dom.js";
 
 /**
@@ -61,10 +62,12 @@ export const renderer = (
 
     const layout = node.taffyNode.tree.getLayout(node.taffyNode.id);
 
-    const output = new Output({
+    const buffer = new CellBuffer({
       width: layout.width,
       height: layout.height,
     });
+
+    const output = new CellOutput(buffer);
 
     renderNodeToOutput(node, output, {
       skipStaticElements: true,
@@ -77,24 +80,26 @@ export const renderer = (
         node.staticNode.taffyNode.id,
       );
 
-      staticOutput = new Output({
+      const staticBuffer = new CellBuffer({
         width: staticLayout.width,
         height: staticLayout.height,
       });
+
+      staticOutput = new CellOutput(staticBuffer);
 
       renderNodeToOutput(node.staticNode, staticOutput, {
         skipStaticElements: false,
       });
     }
 
-    const { output: generatedOutput, height: outputHeight } = output.get();
+    const generatedOutput = buffer.toString();
 
     return {
       output: generatedOutput,
-      outputHeight,
+      outputHeight: buffer.height,
       // Newline at the end is needed, because static output doesn't have one,
       // so interactive output will override last line of static output
-      staticOutput: staticOutput ? `${staticOutput.get().output}\n` : "",
+      staticOutput: staticOutput ? `${staticOutput.buffer.toString()}\n` : "",
     };
   }
 

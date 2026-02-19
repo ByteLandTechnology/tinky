@@ -716,7 +716,7 @@ test("nested overflow", () => {
  */
 test("out of bounds writes do not crash", () => {
   const output = renderToString(
-    <Box width={12} height={10} borderStyle="round" />,
+    <Box width={12} height={10} borderStyle="round" flexShrink={0} />,
     { columns: 10 },
   );
 
@@ -726,11 +726,7 @@ test("out of bounds writes do not crash", () => {
     borderStyle: "round",
   })
     .split("\n")
-    .map((line, index) =>
-      index === 0 || index === 9
-        ? line
-        : `${line.slice(0, 10)}${line[11] ?? ""}`,
-    )
+    .map((line) => line.slice(0, 10).trimEnd())
     .join("\n");
 
   expect(output).toBe(expected);

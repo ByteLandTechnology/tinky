@@ -53,8 +53,8 @@ The charts only include average rendering speed and average bytes.
 xychart-beta
     title "low-frequency-local-dashboard average render time"
     x-axis ["full", "line", "run", "ink"]
-    y-axis "ms (lower is better)" 0 --> 2.067
-    bar [1.099, 1.08, 0.988, 1.798]
+    y-axis "ms (lower is better)" 0 --> 2.082
+    bar [1.004, 0.977, 0.985, 1.811]
 ```
 
 #### Average output bytes
@@ -80,8 +80,8 @@ xychart-beta
 xychart-beta
     title "high-frequency-local-status average render time"
     x-axis ["full", "line", "run", "ink"]
-    y-axis "ms (lower is better)" 0 --> 2.883
-    bar [1.532, 1.508, 1.393, 2.507]
+    y-axis "ms (lower is better)" 0 --> 3.365
+    bar [1.476, 1.457, 1.574, 2.926]
 ```
 
 #### Average output bytes
@@ -107,8 +107,8 @@ xychart-beta
 xychart-beta
     title "low-frequency-broad-table average render time"
     x-axis ["full", "line", "run", "ink"]
-    y-axis "ms (lower is better)" 0 --> 4.839
-    bar [2.466, 2.512, 2.293, 4.207]
+    y-axis "ms (lower is better)" 0 --> 5.386
+    bar [2.544, 2.571, 2.491, 4.684]
 ```
 
 #### Average output bytes
@@ -134,8 +134,8 @@ xychart-beta
 xychart-beta
     title "high-frequency-broad-logstream average render time"
     x-axis ["full", "line", "run", "ink"]
-    y-axis "ms (lower is better)" 0 --> 7.177
-    bar [3.67, 3.7, 3.447, 6.241]
+    y-axis "ms (lower is better)" 0 --> 8.585
+    bar [4.384, 4.394, 4.47, 7.466]
 ```
 
 #### Average output bytes
@@ -158,8 +158,8 @@ Global values are averages of per-scenario averages for each mode.
 xychart-beta
     title "global average render time"
     x-axis ["full", "line", "run", "ink"]
-    y-axis "ms (lower is better)" 0 --> 4.241
-    bar [2.192, 2.2, 2.03, 3.688]
+    y-axis "ms (lower is better)" 0 --> 4.855
+    bar [2.352, 2.35, 2.38, 4.222]
 ```
 
 #### Average output bytes
@@ -179,10 +179,10 @@ Negative percentages mean lower ms or lower bytes than Ink.
 
 | mode | average ms | speed vs ink | average bytes | bytes vs ink |
 | ---- | ---------- | ------------ | ------------- | ------------ |
-| full | 2.19       | -40.6%       | 674.35        | -2.3%        |
-| line | 2.20       | -40.3%       | 354.46        | -48.7%       |
-| run  | 2.03       | -45.0%       | 243.89        | -64.7%       |
-| ink  | 3.69       | +0.0%        | 690.35        | +0.0%        |
+| full | 2.35       | -44.3%       | 674.35        | -2.3%        |
+| line | 2.35       | -44.3%       | 354.46        | -48.7%       |
+| run  | 2.38       | -43.6%       | 243.89        | -64.7%       |
+| ink  | 4.22       | +0.0%        | 690.35        | +0.0%        |
 
 ## Notes
 
