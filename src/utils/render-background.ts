@@ -1,4 +1,4 @@
-import { colorize } from "./colorize.js";
+import { getStyle } from "./colorize.js";
 import { type DOMNode } from "../core/dom.js";
 import { type OutputLike } from "../core/output.js";
 
@@ -42,18 +42,17 @@ export const renderBackground = (
   }
 
   // Create background fill for each row
-  const backgroundLine = colorize(
-    " ".repeat(contentWidth),
-    node.style.backgroundColor,
-    "background",
-  );
+  const style = getStyle(node.style.backgroundColor, "background");
+  const styles = style ? [style] : [];
 
   for (let row = 0; row < contentHeight; row++) {
-    output.write(
+    output.fill(
       x + leftBorderWidth,
       y + topBorderHeight + row,
-      backgroundLine,
-      { transformers: [] },
+      contentWidth,
+      " ",
+      1,
+      styles,
     );
   }
 };

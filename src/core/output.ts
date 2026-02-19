@@ -9,6 +9,7 @@ import {
 } from "@alcalzone/ansi-tokenize";
 import { type OutputTransformer } from "./render-node-to-output.js";
 import { type Dimension } from "../utils/dimension.js";
+import { type AnsiCode } from "../types/ansi.js";
 
 /**
  * Options for writing text to an output target.
@@ -39,6 +40,14 @@ export interface OutputLike {
   write(x: number, y: number, text: string, options: OutputWriteOptions): void;
   clip(clip: Clip): void;
   unclip(): void;
+  fill(
+    x: number,
+    y: number,
+    length: number,
+    char: string,
+    charWidth: number,
+    styles: AnsiCode[],
+  ): void;
 }
 
 /**
@@ -147,6 +156,29 @@ export class Output implements OutputLike {
     this.operations.push({
       type: "unclip",
     });
+  }
+
+  fill(
+    x: number,
+    y: number,
+    length: number,
+    char: string,
+    _charWidth: number,
+    styles: AnsiCode[],
+  ): void {
+    if (length <= 0) {
+      return;
+    }
+
+    const prefix = styles.map((style) => style.code).join("");
+    const suffix = [...styles]
+      .reverse()
+      .map((style) => style.endCode)
+      .join("");
+
+    const text = prefix + char.repeat(length) + suffix;
+
+    this.write(x, y, text, { transformers: [] });
   }
 
   /**

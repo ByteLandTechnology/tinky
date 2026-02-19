@@ -12,6 +12,7 @@ import {
   type OutputLike,
   type OutputWriteOptions,
 } from "./output.js";
+import { type AnsiCode } from "../types/ansi.js";
 
 export class CellOutput implements OutputLike {
   private readonly clips: Clip[] = [];
@@ -28,6 +29,52 @@ export class CellOutput implements OutputLike {
 
   unclip(): void {
     this.clips.pop();
+  }
+
+  fill(
+    x: number,
+    y: number,
+    length: number,
+    char: string,
+    charWidth: number,
+    styles: AnsiCode[],
+  ): void {
+    if (length <= 0) {
+      return;
+    }
+
+    const visualLength = length * charWidth;
+    let startX = x;
+    let endX = x + visualLength;
+    const row = y;
+
+    const clip = this.clips.at(-1);
+
+    if (clip) {
+      const clipY1 = clip.y1 ?? 0;
+      // Clipping logic: y2 is exclusive boundary
+      if (clip.y2 !== undefined && row >= clip.y2) {
+        return;
+      }
+      if (row < clipY1) {
+        return;
+      }
+
+      const clipX1 = clip.x1 ?? 0;
+      startX = Math.max(startX, clipX1);
+
+      if (clip.x2 !== undefined) {
+        endX = Math.min(endX, clip.x2);
+      }
+    }
+
+    const fillVisualLength = endX - startX;
+    if (fillVisualLength <= 0) {
+      return;
+    }
+
+    const styleId = this.buffer.styleRegistry.getId(styles);
+    this.buffer.fill(startX, row, fillVisualLength, char, charWidth, styleId);
   }
 
   write(x: number, y: number, text: string, options: OutputWriteOptions): void {

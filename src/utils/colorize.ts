@@ -64,59 +64,99 @@ const isNamedColor = (color: string): color is ForegroundColorName => {
  * @param type - Whether to apply the color to the foreground or background.
  * @returns The colorized string.
  */
-export const colorize = (
-  str: string,
+import { type AnsiCode } from "../types/ansi.js";
+
+/**
+ * Gets the ANSI style for a color.
+ */
+export const getStyle = (
   color: string | undefined,
   type: ColorType,
-): string => {
+): AnsiCode | undefined => {
   if (!color) {
-    return str;
+    return undefined;
   }
 
   if (isNamedColor(color)) {
     if (type === "foreground") {
-      return ansis[color](str);
+      return {
+        type: "ansi",
+        code: ansis[color].open,
+        endCode: ansis[color].close,
+      };
     }
 
     const methodName = `bg${
       color.charAt(0).toUpperCase() + color.slice(1)
     }` as BackgroundColorName;
 
-    return ansis[methodName](str);
+    return {
+      type: "ansi",
+      code: ansis[methodName].open,
+      endCode: ansis[methodName].close,
+    };
   }
 
   if (color.startsWith("#")) {
-    return type === "foreground"
-      ? ansis.hex(color)(str)
-      : ansis.bgHex(color)(str);
+    const style = type === "foreground" ? ansis.hex(color) : ansis.bgHex(color);
+    return {
+      type: "ansi",
+      code: style.open,
+      endCode: style.close,
+    };
   }
 
   if (color.startsWith("ansi256")) {
     const matches = ansiRegex.exec(color);
 
     if (!matches) {
-      return str;
+      return undefined;
     }
 
     const value = Number(matches[1]);
-
-    return type === "foreground" ? ansis.fg(value)(str) : ansis.bg(value)(str);
+    const style = type === "foreground" ? ansis.fg(value) : ansis.bg(value);
+    return {
+      type: "ansi",
+      code: style.open,
+      endCode: style.close,
+    };
   }
 
   if (color.startsWith("rgb")) {
     const matches = rgbRegex.exec(color);
 
     if (!matches) {
-      return str;
+      return undefined;
     }
 
     const firstValue = Number(matches[1]);
     const secondValue = Number(matches[2]);
     const thirdValue = Number(matches[3]);
 
-    return type === "foreground"
-      ? ansis.rgb(firstValue, secondValue, thirdValue)(str)
-      : ansis.bgRgb(firstValue, secondValue, thirdValue)(str);
+    const style =
+      type === "foreground"
+        ? ansis.rgb(firstValue, secondValue, thirdValue)
+        : ansis.bgRgb(firstValue, secondValue, thirdValue);
+
+    return {
+      type: "ansi",
+      code: style.open,
+      endCode: style.close,
+    };
+  }
+
+  return undefined;
+};
+
+export const colorize = (
+  str: string,
+  color: string | undefined,
+  type: ColorType,
+): string => {
+  const style = getStyle(color, type);
+
+  if (style) {
+    return style.code + str + style.endCode;
   }
 
   return str;

@@ -5,11 +5,7 @@
  * as small numeric IDs via StyleRegistry.
  */
 
-export interface AnsiCode {
-  type: "ansi";
-  code: string;
-  endCode: string;
-}
+import { type AnsiCode } from "../types/ansi.js";
 
 export interface CellBufferSize {
   width: number;
@@ -176,6 +172,45 @@ export class CellBuffer {
           ? 1
           : 0;
       }
+    }
+  }
+
+  fill(
+    x: number,
+    y: number,
+    length: number,
+    char: string,
+    charWidth: number,
+    styleId: number,
+  ): void {
+    if (y < 0 || y >= this.height || length <= 0) {
+      return;
+    }
+
+    const startX = Math.max(0, x);
+    const endX = Math.min(this.width, x + length);
+    const fillLength = endX - startX;
+
+    if (fillLength <= 0) {
+      return;
+    }
+
+    const start = this.index(startX, y);
+
+    // Optimized path for single-width characters (common for background/borders)
+    if (charWidth === 1) {
+      const end = start + fillLength;
+      this.chars.fill(char, start, end);
+      this.widths.fill(1, start, end);
+      this.styleIds.fill(styleId, start, end);
+      this.touched.fill(1, start, end);
+      this.preserveTrailingSpace.fill(0, start, end);
+      return;
+    }
+
+    // Fallback for multi-width characters
+    for (let i = 0; i < fillLength; i += charWidth) {
+      this.setCell(startX + i, y, char, charWidth, styleId, false);
     }
   }
 

@@ -1,135 +1,181 @@
 import { boxStyles } from "./box-styles.js";
 import ansis from "ansis";
-import { colorize } from "../utils/colorize.js";
+import stringWidth from "string-width";
+import { type AnsiCode } from "../types/ansi.js";
+import { getStyle } from "../utils/colorize.js";
 import { type DOMNode } from "./dom.js";
 import { type OutputLike } from "./output.js";
 
-/**
- * Renders the border for a DOM node.
- * Calculates border dimensions and draws border characters with specified
- * styles.
- *
- * @param x - The x-coordinate (column) where the border starts.
- * @param y - The y-coordinate (row) where the border starts.
- * @param node - The DOM node for which to render the border.
- * @param output - The output instance to write the border to.
- */
+// Helper to resolve styles once
+const resolveBorderStyles = (
+  color: string | undefined,
+  dim: boolean | undefined,
+): AnsiCode[] => {
+  const styles: AnsiCode[] = [];
+  if (dim) {
+    styles.push({
+      type: "ansi",
+      code: ansis.dim.open,
+      endCode: ansis.dim.close,
+    });
+  }
+  const colorStyle = getStyle(color, "foreground");
+  if (colorStyle) {
+    styles.push(colorStyle);
+  }
+  return styles;
+};
+
 export const renderBorder = (
   x: number,
   y: number,
   node: DOMNode,
   output: OutputLike,
 ): void => {
-  if (node.style.borderStyle) {
-    const layout = node.taffyNode?.tree.getLayout(node.taffyNode.id);
-    const width = layout?.width ?? 0;
-    const height = layout?.height ?? 0;
+  const { borderStyle } = node.style;
+  if (!borderStyle) {
+    return;
+  }
 
-    const box =
-      typeof node.style.borderStyle === "string"
-        ? boxStyles[node.style.borderStyle]
-        : node.style.borderStyle;
+  const layout = node.taffyNode?.tree.getLayout(node.taffyNode.id);
+  const width = layout?.width ?? 0;
+  const height = layout?.height ?? 0;
 
-    const topBorderColor = node.style.borderTopColor ?? node.style.borderColor;
-    const bottomBorderColor =
-      node.style.borderBottomColor ?? node.style.borderColor;
-    const leftBorderColor =
-      node.style.borderLeftColor ?? node.style.borderColor;
-    const rightBorderColor =
-      node.style.borderRightColor ?? node.style.borderColor;
+  const box =
+    typeof borderStyle === "string" ? boxStyles[borderStyle] : borderStyle;
 
-    const dimTopBorderColor =
-      node.style.borderTopDimColor ?? node.style.borderDimColor;
+  const {
+    borderColor,
+    borderTopColor,
+    borderBottomColor,
+    borderLeftColor,
+    borderRightColor,
+    borderDimColor,
+    borderTopDimColor,
+    borderBottomDimColor,
+    borderLeftDimColor,
+    borderRightDimColor,
+  } = node.style;
 
-    const dimBottomBorderColor =
-      node.style.borderBottomDimColor ?? node.style.borderDimColor;
+  const showTopBorder = node.style.borderTop !== false;
+  const showBottomBorder = node.style.borderBottom !== false;
+  const showLeftBorder = node.style.borderLeft !== false;
+  const showRightBorder = node.style.borderRight !== false;
 
-    const dimLeftBorderColor =
-      node.style.borderLeftDimColor ?? node.style.borderDimColor;
+  const contentWidth =
+    width - (showLeftBorder ? 1 : 0) - (showRightBorder ? 1 : 0);
 
-    const dimRightBorderColor =
-      node.style.borderRightDimColor ?? node.style.borderDimColor;
-
-    const showTopBorder = node.style.borderTop !== false;
-    const showBottomBorder = node.style.borderBottom !== false;
-    const showLeftBorder = node.style.borderLeft !== false;
-    const showRightBorder = node.style.borderRight !== false;
-
-    const contentWidth =
-      width - (showLeftBorder ? 1 : 0) - (showRightBorder ? 1 : 0);
-
-    let topBorder = showTopBorder
-      ? colorize(
-          (showLeftBorder ? box.topLeft : "") +
-            box.top.repeat(contentWidth) +
-            (showRightBorder ? box.topRight : ""),
-          topBorderColor,
-          "foreground",
-        )
-      : undefined;
-
-    if (showTopBorder && dimTopBorderColor) {
-      topBorder = ansis.dim(topBorder);
-    }
-
-    let verticalBorderHeight = height;
-
-    if (showTopBorder) {
-      verticalBorderHeight -= 1;
-    }
-
-    if (showBottomBorder) {
-      verticalBorderHeight -= 1;
-    }
-
-    let leftBorder = (
-      colorize(box.left, leftBorderColor, "foreground") + "\n"
-    ).repeat(verticalBorderHeight);
-
-    if (dimLeftBorderColor) {
-      leftBorder = ansis.dim(leftBorder);
-    }
-
-    let rightBorder = (
-      colorize(box.right, rightBorderColor, "foreground") + "\n"
-    ).repeat(verticalBorderHeight);
-
-    if (dimRightBorderColor) {
-      rightBorder = ansis.dim(rightBorder);
-    }
-
-    let bottomBorder = showBottomBorder
-      ? colorize(
-          (showLeftBorder ? box.bottomLeft : "") +
-            box.bottom.repeat(contentWidth) +
-            (showRightBorder ? box.bottomRight : ""),
-          bottomBorderColor,
-          "foreground",
-        )
-      : undefined;
-
-    if (showBottomBorder && dimBottomBorderColor) {
-      bottomBorder = ansis.dim(bottomBorder);
-    }
-
-    const offsetY = showTopBorder ? 1 : 0;
-
-    if (topBorder) {
-      output.write(x, y, topBorder, { transformers: [] });
-    }
+  // Top Border
+  if (showTopBorder) {
+    const styles = resolveBorderStyles(
+      borderTopColor ?? borderColor,
+      borderTopDimColor ?? borderDimColor,
+    );
 
     if (showLeftBorder) {
-      output.write(x, y + offsetY, leftBorder, { transformers: [] });
+      output.fill(x, y, 1, box.topLeft, stringWidth(box.topLeft), styles);
+    }
+
+    if (contentWidth > 0) {
+      output.fill(
+        x + (showLeftBorder ? 1 : 0),
+        y,
+        contentWidth,
+        box.top,
+        stringWidth(box.top),
+        styles,
+      );
     }
 
     if (showRightBorder) {
-      output.write(x + width - 1, y + offsetY, rightBorder, {
-        transformers: [],
-      });
+      output.fill(
+        x + width - 1,
+        y,
+        1,
+        box.topRight,
+        stringWidth(box.topRight),
+        styles,
+      );
+    }
+  }
+
+  // Vertical Borders
+  let verticalBorderHeight = height;
+  if (showTopBorder) verticalBorderHeight -= 1;
+  if (showBottomBorder) verticalBorderHeight -= 1;
+
+  if (verticalBorderHeight > 0) {
+    const offsetY = y + (showTopBorder ? 1 : 0);
+
+    // Optimization: Resolve styles once
+    const leftStyles = showLeftBorder
+      ? resolveBorderStyles(
+          borderLeftColor ?? borderColor,
+          borderLeftDimColor ?? borderDimColor,
+        )
+      : [];
+
+    const rightStyles = showRightBorder
+      ? resolveBorderStyles(
+          borderRightColor ?? borderColor,
+          borderRightDimColor ?? borderDimColor,
+        )
+      : [];
+
+    // Optimization: Calculate widths once
+    const leftWidth = showLeftBorder ? stringWidth(box.left) : 0;
+    const rightWidth = showRightBorder ? stringWidth(box.right) : 0;
+
+    for (let i = 0; i < verticalBorderHeight; i++) {
+      const row = offsetY + i;
+      if (showLeftBorder) {
+        output.fill(x, row, 1, box.left, leftWidth, leftStyles);
+      }
+      if (showRightBorder) {
+        output.fill(x + width - 1, row, 1, box.right, rightWidth, rightStyles);
+      }
+    }
+  }
+
+  // Bottom Border
+  if (showBottomBorder) {
+    const styles = resolveBorderStyles(
+      borderBottomColor ?? borderColor,
+      borderBottomDimColor ?? borderDimColor,
+    );
+    const bottomY = y + height - 1;
+
+    if (showLeftBorder) {
+      output.fill(
+        x,
+        bottomY,
+        1,
+        box.bottomLeft,
+        stringWidth(box.bottomLeft),
+        styles,
+      );
     }
 
-    if (bottomBorder) {
-      output.write(x, y + height - 1, bottomBorder, { transformers: [] });
+    if (contentWidth > 0) {
+      output.fill(
+        x + (showLeftBorder ? 1 : 0),
+        bottomY,
+        contentWidth,
+        box.bottom,
+        stringWidth(box.bottom),
+        styles,
+      );
+    }
+
+    if (showRightBorder) {
+      output.fill(
+        x + width - 1,
+        bottomY,
+        1,
+        box.bottomRight,
+        stringWidth(box.bottomRight),
+        styles,
+      );
     }
   }
 };
