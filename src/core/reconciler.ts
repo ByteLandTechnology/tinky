@@ -27,6 +27,7 @@ import { applyStyles, type Styles } from "./styles.js";
 import { type OutputTransformer } from "./render-node-to-output.js";
 import type { TaffyNode } from "./taffy-node.js";
 import { process } from "../utils/node-adapter.js";
+import { removeSizeObserversInSubtree } from "./size-observer.js";
 
 // We need to conditionally perform devtools connection to avoid
 // accidentally breaking other third-party code.
@@ -285,6 +286,7 @@ export const reconciler = createReconciler<
   insertInContainerBefore: insertBeforeNode,
   removeChildFromContainer(node, removeNode) {
     removeChildNode(node, removeNode);
+    removeSizeObserversInSubtree(removeNode);
     cleanupTaffyNode(removeNode.taffyNode);
   },
   commitUpdate(node, _type, oldProps, newProps) {
@@ -333,6 +335,7 @@ export const reconciler = createReconciler<
   },
   removeChild(node, removeNode) {
     removeChildNode(node, removeNode);
+    removeSizeObserversInSubtree(removeNode);
     cleanupTaffyNode(removeNode.taffyNode);
   },
   setCurrentUpdatePriority(newPriority: number) {

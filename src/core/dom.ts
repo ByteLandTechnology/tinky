@@ -6,6 +6,7 @@ import { wrapText } from "../utils/wrap-text.js";
 import { squashTextNodes } from "../utils/squash-text-nodes.js";
 import { type OutputTransformer } from "./render-node-to-output.js";
 import { TaffyNode } from "./taffy-node.js";
+import { type SizeObserver } from "./size-observer.js";
 
 /**
  * Interface representing a node in the Tinky tree.
@@ -110,6 +111,8 @@ export type DOMElement = {
   onRender?: () => void;
   /** Callback to trigger an immediate render. */
   onImmediateRender?: () => void;
+  /** Set of resize observers attached to this element. */
+  resizeObservers?: Set<SizeObserver>;
 } & TinkyNode;
 
 /**

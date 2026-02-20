@@ -36,6 +36,10 @@ export {
 } from "./hooks/use-focus-manager.js";
 export { useIsScreenReaderEnabled } from "./hooks/use-is-screen-reader-enabled.js";
 export { measureElement } from "./utils/measure-element.js";
+export {
+  useSizeObserver,
+  type SizeObserverOptions,
+} from "./hooks/use-size-observer.js";
 export { type Dimension } from "./utils/dimension.js";
 export { type ForegroundColorName } from "./utils/colorize.js";
 export { applyTextStyles, type TextStyles } from "./utils/apply-text-styles.js";

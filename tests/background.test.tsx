@@ -27,9 +27,6 @@ const ansi = {
   bgMagenta: "\u001B[45m",
   bgCyan: "\u001B[46m",
 
-  // Hex/RGB colors (24-bit)
-  bgHexRed: "\u001B[48;2;255;0;0m", // #FF0000 or rgb(255,0,0)
-
   // ANSI256 colors
   bgAnsi256Nine: "\u001B[48;5;9m", // Ansi256(9)
 
@@ -304,8 +301,9 @@ test("Box background fills with hex color", () => {
 
   expect(output.includes("Hello"), "Should contain the text").toBeTrue();
   if (supportsAnsi) {
+    const expectedHexOpen = ansis.bgHex("#FF0000").open;
     expect(
-      output.includes(ansi.bgHexRed),
+      output.includes(expectedHexOpen),
       "Should contain hex RGB background code",
     ).toBeTrue();
     expect(
@@ -334,8 +332,9 @@ test("Box background fills with rgb color", () => {
 
   expect(output.includes("Hello"), "Should contain the text").toBeTrue();
   if (supportsAnsi) {
+    const expectedRgbOpen = ansis.bgRgb(255, 0, 0).open;
     expect(
-      output.includes(ansi.bgHexRed),
+      output.includes(expectedRgbOpen),
       "Should contain RGB background code",
     ).toBeTrue();
     expect(

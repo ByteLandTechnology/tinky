@@ -144,6 +144,12 @@ Callback to trigger a render.
 
 `void`
 
+### resizeObservers?
+
+> `optional` **resizeObservers**: `Set`\<`SizeObserver`\>
+
+Set of resize observers attached to this element.
+
 ### staticNode?
 
 > `optional` **staticNode**: `DOMElement`

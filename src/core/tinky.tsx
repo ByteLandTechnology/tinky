@@ -29,6 +29,7 @@ import {
   normalizeIncrementalRendering,
   type IncrementalRenderingOption,
 } from "./incremental-rendering.js";
+import { notifySizeObservers } from "./size-observer.js";
 
 const noop = () => {
   // no-op
@@ -379,6 +380,9 @@ export class Tinky {
         return context.measureFunc(availableSpace.width);
       },
     );
+
+    // Notify all registered resize observers of their current dimensions.
+    notifySizeObservers();
   };
 
   /**
