@@ -1,3 +1,16 @@
+## [1.7.0](https://github.com/ByteLandTechnology/tinky/compare/v1.6.0...v1.7.0) (2026-02-20)
+
+### ✨ Features
+
+- add benchmark harness and report ([d253e77](https://github.com/ByteLandTechnology/tinky/commit/d253e77a05dbc0984aed1ebc409c43a0e9fbdd3c))
+- implement per-row dirty flags and optimize buffer serialization ([b487dfe](https://github.com/ByteLandTechnology/tinky/commit/b487dfe58eee9d41e64ce2699d39d892b964b086))
+- optimize CellOutput with cached styles and efficient fill method ([74f5fa0](https://github.com/ByteLandTechnology/tinky/commit/74f5fa066ea92d452db8d8523e743aa5cb0b2b51))
+- replace Output with CellBuffer in renderer for significantly improved performance ([541eb3e](https://github.com/ByteLandTechnology/tinky/commit/541eb3e3e7b68721c5abe3117e1142ec746b353a))
+
+### ⚡ Performance
+
+- optimize render pipeline and skip writes on unchanged frames ([57c6068](https://github.com/ByteLandTechnology/tinky/commit/57c606817e658eca1c2f8016e4f90ea19f754114))
+
 ## [1.6.0](https://github.com/ByteLandTechnology/tinky/compare/v1.5.0...v1.6.0) (2026-02-18)
 
 ### ✨ Features
