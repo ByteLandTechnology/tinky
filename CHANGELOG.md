@@ -1,3 +1,13 @@
+## [1.8.0](https://github.com/ByteLandTechnology/tinky/compare/v1.7.0...v1.8.0) (2026-02-20)
+
+### ✨ Features
+
+- add useSizeObserver hook ([014ff4a](https://github.com/ByteLandTechnology/tinky/commit/014ff4a9926e321ee08460c1fb5e9319269e48a9))
+
+### ⚡ Performance
+
+- **Text:** prevent unnecessary re-renders by memoizing style transform ([15ce6c4](https://github.com/ByteLandTechnology/tinky/commit/15ce6c4a9e515ee2b1cdee2de8a844941f152036))
+
 ## [1.7.0](https://github.com/ByteLandTechnology/tinky/compare/v1.6.0...v1.7.0) (2026-02-20)
 
 ### ✨ Features
