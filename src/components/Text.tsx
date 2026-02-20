@@ -1,4 +1,4 @@
-import { useContext, type ReactNode } from "react";
+import { useContext, useCallback, type ReactNode } from "react";
 import {
   applyTextStyles,
   type TextStyles,
@@ -90,18 +90,30 @@ export function Text({
     return null;
   }
 
-  const transform = (children: string): string => {
-    return applyTextStyles(children, {
+  const transform = useCallback(
+    (children: string): string => {
+      return applyTextStyles(children, {
+        color,
+        backgroundColor: effectiveBackgroundColor,
+        dimColor,
+        bold,
+        italic,
+        underline,
+        strikethrough,
+        inverse,
+      });
+    },
+    [
       color,
-      backgroundColor: effectiveBackgroundColor,
+      effectiveBackgroundColor,
       dimColor,
       bold,
       italic,
       underline,
       strikethrough,
       inverse,
-    });
-  };
+    ],
+  );
 
   if (isScreenReaderEnabled && ariaHidden) {
     return null;
