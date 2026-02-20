@@ -1,5 +1,22 @@
 import { type DOMElement } from "../core/dom.js";
 
+interface CachedText {
+  epoch: number;
+  text: string;
+}
+
+const cache = new WeakMap<DOMElement, CachedText>();
+let currentEpoch = 0;
+
+/**
+ * Advances the squash cache epoch.
+ * Cached results are valid only within one layout/render cycle.
+ */
+export const advanceSquashTextEpoch = (): number => {
+  currentEpoch += 1;
+  return currentEpoch;
+};
+
 /**
  * Consolidates multiple text nodes into a single string.
  * Useful for combining adjacent text nodes to minimize write operations.
@@ -9,7 +26,12 @@ import { type DOMElement } from "../core/dom.js";
  * @returns The consolidated text string.
  */
 export const squashTextNodes = (node: DOMElement): string => {
-  let text = "";
+  const cached = cache.get(node);
+  if (cached && cached.epoch === currentEpoch) {
+    return cached.text;
+  }
+
+  const parts: string[] = [];
 
   for (let index = 0; index < node.childNodes.length; index++) {
     const childNode = node.childNodes[index];
@@ -41,8 +63,11 @@ export const squashTextNodes = (node: DOMElement): string => {
       }
     }
 
-    text += nodeText;
+    parts.push(nodeText);
   }
+
+  const text = parts.join("");
+  cache.set(node, { epoch: currentEpoch, text });
 
   return text;
 };

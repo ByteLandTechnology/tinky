@@ -69,6 +69,7 @@ Configure incremental rendering mode.
 
 Runtime notes:
 
+- In `run` strategy, terminal writes are skipped entirely when frames are unchanged.
 - In `debug` mode, Tinky always writes full frames.
 - In screen-reader mode, Tinky uses the screen-reader output path.
 - In CI mode, Tinky avoids cursor-diff updates.

@@ -5,6 +5,7 @@ import { isCI } from "../utils/check-ci.js";
 import autoBind from "auto-bind";
 import { onExit } from "../utils/signal-exit.js";
 import { patchConsole } from "../utils/patch-console.js";
+import { advanceSquashTextEpoch } from "../utils/squash-text-nodes.js";
 import { LegacyRoot } from "react-reconciler/constants.js";
 import { type FiberRoot } from "react-reconciler";
 import { type AvailableSpace, type Size } from "taffy-layout";
@@ -345,6 +346,10 @@ export class Tinky {
     if (this.rootNode.taffyNode === undefined) {
       return;
     }
+
+    // Keep text-squash cache scoped to one layout/render cycle.
+    advanceSquashTextEpoch();
+
     const terminalWidth = this.getTerminalWidth();
     const { tree } = this.rootNode.taffyNode;
 
@@ -423,11 +428,7 @@ export class Tinky {
           this.cellLog(this.frontBuffer, buffer, { forceFull: true });
           this.swapRunBuffers();
         }
-      } else if (
-        this.frontBuffer &&
-        this.cellLog &&
-        !this.isRunFrameEqual(buffer)
-      ) {
+      } else if (this.frontBuffer && this.cellLog) {
         this.cellLog(this.frontBuffer, buffer);
         this.swapRunBuffers();
       }
@@ -539,10 +540,6 @@ export class Tinky {
     this.lastOutput = output;
     this.lastOutputHeight = outputHeight;
   };
-
-  private isRunFrameEqual(nextBuffer: CellBuffer): boolean {
-    return this.frontBuffer?.isEqual(nextBuffer) ?? false;
-  }
 
   /**
    * Swaps front and back buffers. After swap, the caller's newly-rendered

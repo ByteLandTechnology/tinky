@@ -7,7 +7,8 @@ import { type CellBuffer } from "./cell-buffer.js";
  * Run-diff renderer for interactive terminal output.
  *
  * Compared with line-diff mode, this renderer diffs cell buffers and emits
- * minimal cursor movement + text writes for changed runs.
+ * minimal cursor movement + text writes for changed runs. It entirely skips
+ * terminal writes when consecutive frames are identical.
  */
 export interface CellLogUpdateRunOptions {
   /** Enables diff updates. Set `false` to force full-frame redraws. */
@@ -578,24 +579,19 @@ const create = (
     const nextCount = nextHeight + 1;
     const visibleCount = nextHeight;
 
-    const chunks: string[] = [];
-    if (nextCount < prevCount) {
-      chunks.push(ansiEscapes.eraseLines(prevCount - nextCount + 1));
-      chunks.push(ansiEscapes.cursorUp(visibleCount));
-    } else {
-      chunks.push(ansiEscapes.cursorUp(prevCount - 1));
-    }
-
+    const rowChunks: string[] = [];
+    let hasDiff = false;
     const width = nextBuffer.width;
 
     // Incremental path: process one row at a time and emit minimal writes.
     for (let row = 0; row < visibleCount; row++) {
       if (prevBuffer.isRowEqual(nextBuffer, row)) {
-        chunks.push(ansiEscapes.cursorNextLine);
+        rowChunks.push(ansiEscapes.cursorNextLine);
         continue;
       }
 
-      chunks.push(cursorToColumn(0));
+      hasDiff = true;
+      rowChunks.push(cursorToColumn(0));
 
       const nextEnd = nextBuffer.getRowRightEdge(row);
       const prevEnd = prevBuffer.getRowRightEdge(row);
@@ -603,8 +599,8 @@ const create = (
       const scanEnd = tailClear ? nextEnd : Math.max(nextEnd, prevEnd);
 
       if (scanEnd === 0 && tailClear) {
-        chunks.push(ansiEscapes.eraseEndLine);
-        chunks.push(ansiEscapes.cursorNextLine);
+        rowChunks.push(ansiEscapes.eraseEndLine);
+        rowChunks.push(ansiEscapes.cursorNextLine);
         continue;
       }
 
@@ -618,27 +614,27 @@ const create = (
           row,
           0,
           nextEnd,
-          chunks,
+          rowChunks,
           0,
           0,
         );
         let activeStyleId = full.activeStyleId;
         activeStyleId = nextBuffer.appendCloseActiveStyle(
-          chunks,
+          rowChunks,
           activeStyleId,
         );
         if (tailClear) {
-          chunks.push(ansiEscapes.eraseEndLine);
+          rowChunks.push(ansiEscapes.eraseEndLine);
         }
-        chunks.push(ansiEscapes.cursorNextLine);
+        rowChunks.push(ansiEscapes.cursorNextLine);
         continue;
       }
 
       if (segments.length === 0) {
         if (tailClear) {
-          chunks.push(ansiEscapes.eraseEndLine);
+          rowChunks.push(ansiEscapes.eraseEndLine);
         }
-        chunks.push(ansiEscapes.cursorNextLine);
+        rowChunks.push(ansiEscapes.cursorNextLine);
         continue;
       }
 
@@ -661,20 +657,20 @@ const create = (
             row,
             0,
             nextEnd,
-            chunks,
+            rowChunks,
             activeStyleId,
             cursorX,
           );
           cursorX = full.cursorX;
           activeStyleId = full.activeStyleId;
           activeStyleId = nextBuffer.appendCloseActiveStyle(
-            chunks,
+            rowChunks,
             activeStyleId,
           );
           if (tailClear) {
-            chunks.push(ansiEscapes.eraseEndLine);
+            rowChunks.push(ansiEscapes.eraseEndLine);
           }
-          chunks.push(ansiEscapes.cursorNextLine);
+          rowChunks.push(ansiEscapes.cursorNextLine);
           continue;
         }
 
@@ -688,13 +684,13 @@ const create = (
 
             if (delta > 0) {
               if (op.method === "abs") {
-                chunks.push(cursorToColumn(toX));
+                rowChunks.push(cursorToColumn(toX));
               } else {
-                chunks.push(cursorForward(delta));
+                rowChunks.push(cursorForward(delta));
               }
               cursorX = toX;
             } else {
-              chunks.push(cursorToColumn(toX));
+              rowChunks.push(cursorToColumn(toX));
               cursorX = toX;
             }
             continue;
@@ -713,9 +709,9 @@ const create = (
           if (start !== cursorX) {
             const move = chooseHorizontalMove(cursorX, start);
             if (move.method === "abs") {
-              chunks.push(cursorToColumn(start));
+              rowChunks.push(cursorToColumn(start));
             } else {
-              chunks.push(cursorForward(start - cursorX));
+              rowChunks.push(cursorForward(start - cursorX));
             }
             cursorX = start;
           }
@@ -724,7 +720,7 @@ const create = (
             row,
             start,
             end,
-            chunks,
+            rowChunks,
             activeStyleId,
             cursorX,
           );
@@ -745,10 +741,10 @@ const create = (
 
           const delta = segStart - cursorX;
           if (delta > 0) {
-            chunks.push(cursorForward(delta));
+            rowChunks.push(cursorForward(delta));
             cursorX = segStart;
           } else if (delta < 0) {
-            chunks.push(cursorToColumn(segStart));
+            rowChunks.push(cursorToColumn(segStart));
             cursorX = segStart;
           }
 
@@ -756,7 +752,7 @@ const create = (
             row,
             segStart,
             segEnd,
-            chunks,
+            rowChunks,
             activeStyleId,
             cursorX,
           );
@@ -765,22 +761,39 @@ const create = (
         }
       }
 
-      activeStyleId = nextBuffer.appendCloseActiveStyle(chunks, activeStyleId);
+      activeStyleId = nextBuffer.appendCloseActiveStyle(
+        rowChunks,
+        activeStyleId,
+      );
 
       if (tailClear) {
         if (cursorX !== nextEnd) {
           const move = chooseHorizontalMove(cursorX, nextEnd);
           if (move.method === "abs") {
-            chunks.push(cursorToColumn(nextEnd));
+            rowChunks.push(cursorToColumn(nextEnd));
           } else {
-            chunks.push(cursorForward(Math.max(0, nextEnd - cursorX)));
+            rowChunks.push(cursorForward(Math.max(0, nextEnd - cursorX)));
           }
         }
-        chunks.push(ansiEscapes.eraseEndLine);
+        rowChunks.push(ansiEscapes.eraseEndLine);
       }
 
-      chunks.push(ansiEscapes.cursorNextLine);
+      rowChunks.push(ansiEscapes.cursorNextLine);
     }
+
+    if (!hasDiff && nextCount === prevCount) {
+      previousHeight = nextHeight;
+      return;
+    }
+
+    const chunks: string[] = [];
+    if (nextCount < prevCount) {
+      chunks.push(ansiEscapes.eraseLines(prevCount - nextCount + 1));
+      chunks.push(ansiEscapes.cursorUp(visibleCount));
+    } else {
+      chunks.push(ansiEscapes.cursorUp(prevCount - 1));
+    }
+    chunks.push(...rowChunks);
 
     stream.write(chunks.join(""));
     previousHeight = nextHeight;

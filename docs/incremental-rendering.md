@@ -36,6 +36,7 @@ movement volume.
 
 - Line-diff compares output by line and rewrites changed lines.
 - Run-diff compares per-cell content and writes only changed runs.
+- Run-diff skips terminal writes entirely when the rendered frame is unchanged.
 - Run-diff usually writes fewer bytes when each frame changes in small regions.
 - Line-diff can be easier to reason about if your app changes full lines often.
 
@@ -59,14 +60,14 @@ You need to know these interactions when you build logging-heavy CLIs.
   interactive frame and then restore it.
 - Transformer-produced trailing spaces are preserved in both line and run modes.
 
-## Benchmark and gate performance
+## Benchmark performance
 
-Tinky includes scripts for local benchmark runs and CI-style threshold checks.
-Run them when you tune rendering settings or update diff logic.
+Tinky includes a scenario-based benchmark suite. Run it when you tune
+rendering settings, layout bounds, or output diff logic.
 
-1. Run `bun run perf:render` to print benchmark samples.
-2. Run `bun run perf:gate` to enforce the threshold used in CI.
-3. Compare median timings between line-diff and run-diff outputs.
+1. Run `bun run benchmark` to execute the scenario suite.
+2. Review the refreshed `docs/benchmark.md` for output size and render speed.
+3. Check the `speed vs ink` global metric to ensure diffing overhead stays low.
 
 ## Troubleshoot rendering issues
 

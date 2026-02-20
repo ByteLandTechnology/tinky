@@ -239,6 +239,24 @@ test("incrementalRendering true uses run strategy", async () => {
   unmount();
 });
 
+test("incrementalRendering run strategy skips unchanged rerender writes", async () => {
+  const stdout = createStdout();
+
+  const { rerender, unmount } = render(<Text>steady</Text>, {
+    stdout,
+    patchConsole: false,
+    maxFps: 1000,
+    incrementalRendering: true,
+  });
+
+  expect(stdout.callCount()).toBe(1);
+  rerender(<Text>steady</Text>);
+  await delay(50);
+  expect(stdout.callCount()).toBe(1);
+
+  unmount();
+});
+
 /**
  * Verifies that explicit line strategy keeps the previous line-diff behavior.
  */

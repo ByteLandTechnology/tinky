@@ -244,8 +244,18 @@ export class CellBuffer {
       return true;
     }
 
+    const thisRightEdge = this.getRowRightEdge(row);
+    const otherRightEdge = other.getRowRightEdge(row);
+    if (thisRightEdge !== otherRightEdge) {
+      return false;
+    }
+
+    if (thisRightEdge === 0) {
+      return true;
+    }
+
     const start = row * this.width;
-    const end = start + this.width;
+    const end = start + thisRightEdge;
 
     for (let index = start; index < end; index++) {
       if (this.styleIds[index] !== other.styleIds[index]) {
@@ -255,14 +265,6 @@ export class CellBuffer {
         return false;
       }
       if (this.chars[index] !== other.chars[index]) {
-        return false;
-      }
-      if (this.touched[index] !== other.touched[index]) {
-        return false;
-      }
-      if (
-        this.preserveTrailingSpace[index] !== other.preserveTrailingSpace[index]
-      ) {
         return false;
       }
     }

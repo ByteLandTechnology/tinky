@@ -34,6 +34,7 @@ render(<App />, { incrementalRendering: { enabled: false } });
 
 - line-diff 按行比较输出，并重写变更行。
 - run-diff 按单元格比较输出，只写入变化的连续片段。
+- 当渲染帧完全无变化时，run-diff 会完全跳过终端写入。
 - 当每帧只在局部变化时，run-diff 通常写入更少字节。
 - 如果你的应用经常整行变化，line-diff 可能更容易理解和调试。
 
@@ -56,14 +57,14 @@ render(<App />, { incrementalRendering: { enabled: false } });
   写入完成后再恢复。
 - 由 transformer 产生的行尾空格，在 line 与 run 模式下都会被保留。
 
-## 基准测试与性能门禁
+## 基准测试
 
-Tinky 内置了本地基准脚本和 CI 风格的阈值校验脚本。调整渲染逻辑时建议一起
-运行。
+Tinky 内置了基于场景的性能基准测试套件。调整渲染逻辑、布局边界或输出差分时
+建议运行。
 
-1. 运行 `bun run perf:render` 查看基准样本。
-2. 运行 `bun run perf:gate` 执行与 CI 一致的门禁校验。
-3. 对比 line-diff 与 run-diff 的中位耗时。
+1. 运行 `bun run benchmark` 执行所有场景。
+2. 查看生成的 `docs/benchmark.md` 以获悉输出大小与渲染速度。
+3. 检查全局指标 `speed vs ink` 确保差分计算开销保持在较低水平。
 
 ## 排查渲染问题
 

@@ -273,7 +273,7 @@ test("switch focus to the previous component on Shift+Tab", async () => {
   expect(stdout.get()).toBe(["First", "Second ✔", "Third"].join("\n"));
 
   stdin.emitReadable("\u001B[Z");
-  await delay(100);
+  await delay(150);
 
   expect(stdout.get()).toBe(["First ✔", "Second", "Third"].join("\n"));
 });

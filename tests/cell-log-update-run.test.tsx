@@ -128,3 +128,16 @@ test("run-diff done does not clear the rendered frame", () => {
   expect(stdout.callCount()).toBe(1);
   expect(stdout.firstCall()).toBe("abcde\n");
 });
+
+test("run-diff does not write when frame is unchanged", () => {
+  const styleRegistry = new StyleRegistry();
+  const stdout = createStdout();
+  const render = cellLogUpdateRun.create(stdout, { incremental: true });
+
+  const frame = createBuffer(8, "same", styleRegistry);
+  render(frame, frame, { forceFull: true });
+  expect(stdout.callCount()).toBe(1);
+
+  render(frame, frame);
+  expect(stdout.callCount()).toBe(1);
+});

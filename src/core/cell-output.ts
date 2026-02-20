@@ -14,8 +14,49 @@ import {
 } from "./output.js";
 import { type AnsiCode } from "../types/ansi.js";
 
+const ESC = "\u001b";
+
+const isPrintableAsciiText = (value: string): boolean => {
+  for (let index = 0; index < value.length; index++) {
+    const code = value.charCodeAt(index);
+    if (code === 10) {
+      continue;
+    }
+    if (code < 0x20 || code > 0x7e) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const getCharWidth = (
+  value: string,
+  widthCache: Map<string, number>,
+): number => {
+  if (
+    value.length === 1 &&
+    value.charCodeAt(0) >= 0x20 &&
+    value.charCodeAt(0) <= 0x7e
+  ) {
+    return 1;
+  }
+
+  const cached = widthCache.get(value);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const width = Math.max(1, stringWidth(value));
+  widthCache.set(value, width);
+  return width;
+};
+
 export class CellOutput implements OutputLike {
   private readonly clips: Clip[] = [];
+  private readonly styleIdByRef = new WeakMap<readonly AnsiCode[], number>();
+  private lastStyleRef: readonly AnsiCode[] | undefined;
+  private lastStyleId = 0;
 
   readonly buffer: CellBuffer;
 
@@ -77,6 +118,63 @@ export class CellOutput implements OutputLike {
     this.buffer.fill(startX, row, fillVisualLength, char, charWidth, styleId);
   }
 
+  private resolveStyleId(styles: readonly AnsiCode[]): number {
+    if (styles.length === 0) {
+      return 0;
+    }
+
+    if (styles === this.lastStyleRef) {
+      return this.lastStyleId;
+    }
+
+    const byRef = this.styleIdByRef.get(styles);
+    if (byRef !== undefined) {
+      this.lastStyleRef = styles;
+      this.lastStyleId = byRef;
+      return byRef;
+    }
+
+    const styleId = this.buffer.styleRegistry.getId(styles);
+    this.styleIdByRef.set(styles, styleId);
+    this.lastStyleRef = styles;
+    this.lastStyleId = styleId;
+    return styleId;
+  }
+
+  private writePlainLine(
+    line: string,
+    writeX: number,
+    row: number,
+    preserveLineTrailingSpaces: boolean,
+    widthCache: Map<string, number>,
+  ): void {
+    let offsetX = writeX;
+    for (const value of line) {
+      const charWidth = getCharWidth(value, widthCache);
+
+      if (offsetX < 0) {
+        offsetX += charWidth;
+        continue;
+      }
+      if (offsetX >= this.buffer.width) {
+        break;
+      }
+      if (offsetX + charWidth > this.buffer.width) {
+        break;
+      }
+
+      this.buffer.setCell(
+        offsetX,
+        row,
+        value,
+        charWidth,
+        0,
+        preserveLineTrailingSpaces,
+      );
+      offsetX += charWidth;
+    }
+  }
+
   write(x: number, y: number, text: string, options: OutputWriteOptions): void {
     const { transformers } = options;
     if (!text) {
@@ -89,8 +187,39 @@ export class CellOutput implements OutputLike {
     // Match Output.get() semantics: transformed lines may intentionally keep
     // trailing spaces (for alignment or visual effects), so mark them.
     const preserveLineTrailingSpaces = transformers.length > 0;
+    const widthCache = new Map<string, number>();
 
     const clip = this.clips.at(-1);
+
+    if (
+      !clip &&
+      transformers.length === 0 &&
+      !text.includes(ESC) &&
+      isPrintableAsciiText(text)
+    ) {
+      let offsetY = 0;
+      for (const line of lines) {
+        const row = writeY + offsetY;
+        if (row < 0) {
+          offsetY++;
+          continue;
+        }
+        if (row >= this.buffer.height) {
+          break;
+        }
+
+        this.writePlainLine(
+          line,
+          writeX,
+          row,
+          preserveLineTrailingSpaces,
+          widthCache,
+        );
+        offsetY++;
+      }
+      return;
+    }
+
     if (clip) {
       const clipHorizontally =
         typeof clip.x1 === "number" && typeof clip.x2 === "number";
@@ -158,11 +287,26 @@ export class CellOutput implements OutputLike {
         transformedLine = transformer(transformedLine, lineIndex);
       }
 
+      if (
+        !transformedLine.includes(ESC) &&
+        isPrintableAsciiText(transformedLine)
+      ) {
+        this.writePlainLine(
+          transformedLine,
+          writeX,
+          row,
+          preserveLineTrailingSpaces,
+          widthCache,
+        );
+        offsetY++;
+        continue;
+      }
+
       const styledChars = styledCharsFromTokens(tokenize(transformedLine));
       let offsetX = writeX;
 
       for (const char of styledChars) {
-        const charWidth = Math.max(1, stringWidth(char.value));
+        const charWidth = getCharWidth(char.value, widthCache);
 
         if (offsetX < 0) {
           offsetX += charWidth;
@@ -175,7 +319,7 @@ export class CellOutput implements OutputLike {
           break;
         }
 
-        const styleId = this.buffer.styleRegistry.getId(char.styles);
+        const styleId = this.resolveStyleId(char.styles as readonly AnsiCode[]);
         this.buffer.setCell(
           offsetX,
           row,

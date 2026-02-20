@@ -2,11 +2,7 @@ import { test, expect } from "bun:test";
 import ansis from "ansis";
 import { render, Box, Text } from "../src/index.js";
 import { renderToString } from "./helpers/render-to-string.js";
-import {
-  styledCharsFromTokens,
-  styledCharsToString,
-  tokenize,
-} from "@alcalzone/ansi-tokenize";
+
 import { createStdout } from "./helpers/create-stdout.js";
 
 /**
@@ -46,11 +42,7 @@ test("text with dim+bold", () => {
       Test
     </Text>,
   );
-  expect(output).toEqual(
-    styledCharsToString(
-      styledCharsFromTokens(tokenize(ansis.dim(ansis.bold("Test")))),
-    ),
-  );
+  expect(output).toBe("\u001b[1m\u001b[2mTest\u001b[22m\u001b[22m");
 });
 
 /**
